@@ -1,5 +1,5 @@
 # Citation metadata (Citation File Format 1.2.0). GitHub renders it as "Cite this repository";
-# Zenodo reads it when a release is archived. The Zenodo concept DOI belongs in `doi:` once minted.
+# Zenodo reads it when a release is archived. `doi:` is the Zenodo concept DOI (all versions).
 cff-version: 1.2.0
 message: >-
   If you use this code or its data, please cite the thesis it accompanies
@@ -42,7 +42,7 @@ repository-code: "https://github.com/ArachnidaDuality/platonic-povm-groups"
 license: MIT
 version: "1.0.0"
 date-released: 2026-09-04
-# doi: 10.5281/zenodo.XXXXXXX
+doi: 10.5281/zenodo.22301032
 preferred-citation:
   type: thesis
   thesis-type: "Bachelor's thesis"

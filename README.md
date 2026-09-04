@@ -1,13 +1,13 @@
 # Symmetry Groups of the Platonic Solid POVMs: Binary Polyhedral Groups as Quantum Circuits
 
-A BSc thesis, and the code that produced every number in it. **→ [`paper/bsc-thesis.pdf`](paper/bsc-thesis.pdf)** (pre-submission).
+A BSc thesis, and its code. **→ [`paper/bsc-thesis.pdf`](paper/bsc-thesis.pdf)** (pre-submission).
 
 Behind every Platonic-solid POVM stands a group: the rotations carrying the solid to itself,
 lifted through the SU(2) → SO(3) double cover to one of the three *binary polyhedral groups*
 2T, 2O, 2I — the exceptional finite subgroups of SU(2), and exactly the unitaries that permute
 the measurement's outcomes. The thesis constructs those groups, synthesizes all 24 + 48 + 120
-elements as explicit circuits over a minimal gate set, weighs what they cost, and then puts the
-measurements to work in a classical-shadows estimation study.
+elements as explicit circuits over a minimal gate set, weighs what they cost, and then considers the
+measurements in classical shadow estimation.
 
 ```
 paper/   manuscript (LaTeX + PDF) and its standalone figures
@@ -17,8 +17,8 @@ extras/  Appendix D.1 at reading pace, an interactive POVM viewer, a Lean 4 chec
 
 ## Where the numbers come from
 
-No table or data figure in the thesis is typed by hand; each is emitted by a script, and the
-script is the real citable object. Everything runs from `code/`, in the order below — the later
+Table and data figures in the thesis are emitted by scripts.
+Everything runs from `code/`, in the order below — the later
 entries read `.npz` files the earlier ones write. Python is managed with
 [uv](https://docs.astral.sh/uv/), which installs the pinned environment on first use, and one
 command runs it all:
@@ -60,21 +60,21 @@ run it, not the seven sibling modules that hold its bindings.
 ## How far the checking goes
 
 **Every script is self-verifying.** Each asserts the claims it exists to support and exits
-non-zero the moment one fails, so a clean exit *is* the result — there is nothing to eyeball.
+non-zero the moment one fails, so a clean exit *is* the result — nothing to eyeball.
 Six of them write nothing at all and are pure checks.
 
-**Nothing numerical decides anything.** `main.py` and `povm_properties.py` work symbolically in
-SymPy over ℚ(√2, √5, i); exact identity, not tolerance, settles every comparison.
+**The main implementation is symbolic.** `main.py` and `povm_properties.py` work symbolically in
+SymPy over ℚ(√2, √5, i); exact identity settles every comparison.
 
-**The whole thing is computed twice.** `numpy_atlas.py` re-derives all three pillars — groups,
+**A NumPy reimplementation exists.** `numpy_atlas.py` re-derives all three pillars — groups,
 synthesis, POVMs — from scratch in plain numpy, no SymPy anywhere, then diffs value-for-value
 against the symbolic output in `data/`. An independent reimplementation, and a way to read the
 project without the symbolic layer.
 
-**Re-running is byte-clean.** A full sweep reproduces every tracked artifact identically —
+**Full reproducibility.** A full sweep reproduces every tracked artifact identically —
 `git status` stays silent, the seeded Monte-Carlo `.npz` and the matplotlib PDFs (which pin
 their embedded creation date) included. A diff after a re-run is therefore always a real
-regression and never noise — and `everything.py`'s drift report ends by saying exactly that.
+regression and never noise — `everything.py`'s drift report ends by saying exactly that.
 
 ## Guided tours
 

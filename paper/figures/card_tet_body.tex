@@ -1,0 +1,87 @@
+% Appendix D, Figure D.1 --- "The tetrahedral POVM, end to end".  The layout only.
+%
+% Layout: card_oct_body.tex's header is binding.  Deviations from it, and only
+% they, are listed here.
+%
+%   * the sphere is Figure 1.1's own recipe_tet_sphere.pdf, reused byte for
+%     byte rather than redrawn, so that Figure 1.1 and this card agree by
+%     construction instead of by luck.  Assertion 21 measures whichever file
+%     is named, so the reuse is checked and not exempted.
+%   * the circuit is the widest of the five relative to its content
+%     (336.465bp) and the side stack the tallest (four atoms: $U_A$, $\alpha$,
+%     $\beta$, and $S$ with $H$), so band 2 runs 344pt + 103pt.
+%   * BAND 4 HAS NO RAY LIST.  These four vertices form no antipodal pair, so
+%     there is no coin: head 4 reads "No coin over axes" and the band is one
+%     label.  Its first sentence is the only place on the five cards where
+%     the two randomized protocols meet, and they must meet as a contrast --
+%     without it a reader concludes this solid admits no randomization at
+%     all, which its own dashed $U_g$ contradicts one band above.  Its
+%     second sentence is the one claim on the five pages that bsc-thesis.tex
+%     makes nowhere else: draw 2T against an aligned vertex anyway and the
+%     readout's two poles assemble the CUBE, eight effects of weight 2/8.
+%     Not a failure -- a different POVM, and the only Platonic case where
+%     the vertex orbit is not already antipodally closed.  It is also this
+%     card's one outward pointer, to Figure D.3.  Head 4 carries no Appendix
+%     A pointer: there are no coin words to route.
+%   * the reserve is 171.63pt, the largest of the five by a wide margin, and it sits
+%     below the caption as trailing white.  The tetrahedron IS the small card
+%     -- four vertices, two wires, no dead outcome, no coin -- and Figure 1.1
+%     already carries it in full.
+% All macros below are \def and therefore local to the figure environment.
+\parindent=0pt \parskip=0pt
+\input{../code/data/card_tet_data}
+\long\def\NIS#1{\vskip #1\nointerlineskip}
+\long\def\CTR#1#2{\hbox to #1{\hss #2\hss}}
+\long\def\PBOX#1#2{\vtop{\hsize=#1\parindent0pt\sloppy\emergencystretch=1.5em\small #2}}
+\long\def\COL#1#2{\vtop{\hsize=#1\parindent0pt\hbox{}\nointerlineskip #2}}
+\long\def\FULLHEAD#1#2#3{\hbox to \hsize{\small\textbf{#1}\,#2\hfil{\footnotesize #3}}}
+\def\BANDRULE{\vskip2pt\hrule height0.5pt\vskip1.5pt\nointerlineskip}
+\long\def\TAB#1{{\small\renewcommand{\arraystretch}{0.88}\setlength{\tabcolsep}{3pt}#1}}
+%
+\vbox{\hsize\textwidth\parindent0pt
+%
+% --- title and the header strip: Figure 1.1's own row -----------------------
+\hbox to \hsize{\large\bfseries \CTitle\hfil{\normalfont\footnotesize \CPtrStrip}}%
+\NIS{5pt}%
+\hbox{\CStrip}%
+\BANDRULE
+%
+% --- band 1: the object -----------------------------------------------------
+\FULLHEAD{1}{\CHeadA}{\CPtrA}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{170pt}{\CTR{170pt}{\includegraphics{figures/recipe_tet_sphere.pdf}}}%
+  \hfil
+  \COL{277pt}{\hbox to 277pt{\hfil\TAB{\CardVertexTable}}}%
+}%
+\NIS{4pt}%
+\PBOX{\hsize}{\CIdent}%
+\BANDRULE
+%
+% --- band 2: the machine ----------------------------------------------------
+\FULLHEAD{2}{\CHeadB}{\CPtrB}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{344pt}{\hbox to 344pt{\includegraphics{figures/card_dec_tet.pdf}\hss}}%
+  \hfil
+  \COL{103pt}{\small\CardSide}%
+}%
+\NIS{5pt}%
+\PBOX{\hsize}{\CParams}%
+\BANDRULE
+%
+% --- band 3: the readout ----------------------------------------------------
+\FULLHEAD{3}{\CHeadC}{\CPtrC}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{120pt}{\TAB{\CardKey}}%
+  \hfil
+  \COL{324pt}{\PBOX{324pt}{\CKappa}}%
+}%
+\BANDRULE
+%
+% --- band 4: the alternative ------------------------------------------------
+\FULLHEAD{4}{\CHeadD}{\CPtrD}%
+\NIS{5pt}%
+\PBOX{\hsize}{\CCoin}%
+}%

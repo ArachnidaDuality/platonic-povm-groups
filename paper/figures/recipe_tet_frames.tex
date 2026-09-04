@@ -1,0 +1,48 @@
+% Figure 1.1, band C --- one rotation watched, three frames.
+%
+% Bare tetrahedron wireframes in the hero sphere's pose {60}{120}: far face
+% (2-3-4) grey, the three edges meeting vertex 1 black, so the solid reads as
+% turned rather than redrawn.  The numerals ride round with it.
+%
+% THE THREE TOKEN LISTS ARE LOAD-BEARING.  \MiniTet's arguments are
+% (site 1, site 2, site 3, site 4) and each entry is the numeral now sitting at
+% that site.  The rule that generates them: numeral k is drawn at site g(k), so
+% site m shows numeral g^{-1}(m).  Frame 0 is the identity; frame 1 is pair 2's
+% F, sending 1234 -> 1423; frame 2 is F.F = -F^dagger, pair 3, 1234 -> 1342.
+% _build_recipe_figure.py's eleventh assertion reads these very lines back and
+% checks them against g^{-1} computed from the group data, because getting the
+% direction backwards here is the single likeliest error on the page.
+% Check by eye: numeral 2 starts at the top site and ends bottom-left after one
+% F --- g(2) = 4, and site 4 is bottom-left.
+% Read site by site, frame 1 is (1,3,4,2) and frame 2 (1,4,2,3): exactly pair
+% 2's and pair 3's rows in the rotation table, whose last column prints the
+% reading g^{-1}.  The arrow labels are plain F, not bold: turning the solid is
+% a rotation claim, phase-blind (the bold-by-claim rule).
+%
+% The numerals are the panel's payload -- the reader is asked to watch them
+% travel -- so they are set at the hero sphere's chip size (\footnotesize in
+% standalone's 10pt class = 8pt, matching recipe_tet_sphere.pdf 200pt above),
+% not a size below it.  Costs 1pt of height, which band C's right column has.
+%
+% Include at natural size --- no width=.
+\input{_povm_sphere_preamble}
+\standaloneconfig{border=2pt}
+\usetikzlibrary{calc}
+% \MiniTet{scale}{numeral at site 1}{...site 2}{...site 3}{...site 4}
+\newcommand{\MiniTet}[5]{%
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+  \begin{scope}[scale=#1, tdplot_main_coords]
+    \coordinate (O) at (0,0,0);
+    \foreach \k in {1,2,3,4}{\coordinate (s\k) at (\Vx{tet}{\k},\Vy{tet}{\k},\Vz{tet}{\k});}
+    \draw[line width=0.4pt,black!35] (s2)--(s3) (s2)--(s4) (s3)--(s4);
+    \draw[line width=0.5pt,black]    (s1)--(s2) (s1)--(s3) (s1)--(s4);
+  \end{scope}
+  \foreach \k/\t in {1/#2,2/#3,3/#4,4/#5}{%
+    \node[circle,draw=black,line width=0.35pt,fill=white,inner sep=0.4pt,
+          minimum size=9.5pt,font=\footnotesize] at ($(s\k)!-4pt!(O)$) {\t};}
+  \end{tikzpicture}}
+\begin{document}
+\MiniTet{0.75}{1}{2}{3}{4}\;$\xrightarrow{\ F\ }$\;%
+\MiniTet{0.75}{1}{3}{4}{2}\;$\xrightarrow{\ F\ }$\;%
+\MiniTet{0.75}{1}{4}{2}{3}
+\end{document}

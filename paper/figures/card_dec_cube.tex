@@ -1,0 +1,30 @@
+% Appendix D, the cubic card, band 2 --- Decker Fig. 9 as the card draws it.
+%
+% circuit_dec_cube.tex with exactly three differences, and the generator
+% (code/_build_povm_cards.py, assertion 14) grid-diffs this file against that
+% one cell by cell and admits no others:
+%   (i)   one inserted column on the data row carrying the optional pre-rotation
+%         \gate{U_g}, fenced by its own dashed \gategroup{3}{2}{3}{2}{.7em}{--},
+%         and one \qw in that column on every other wire;
+%   (ii)  the reorientation drawn as the named box \gate{U_R = T^\dagger} --- the
+%         second of the two exact reorientations, and the second of the two the
+%         card names AND draws, so that Appendix D.2's "the tetrahedron's and
+%         the cube's correction is drawn" stays true verbatim;
+%   (iii) the solid \gategroup's column indices shifted by exactly +1.
+% Both new gates sit OUTSIDE the solid \gategroup, which still fences Decker's
+% published block exactly as before: reorient Decker, never the atlas.
+%
+% Set flush left on the card, never centred: all of xy-pic's ~13.7bp of slack is
+% on the right, and _circuit_preamble's border={14pt 0.5pt 14pt 0.5pt} is what
+% keeps the \lstick |0> and rho labels from being clipped.  Include at natural
+% size --- no width=.
+\input{_circuit_preamble}
+\begin{document}
+$$
+\Qcircuit @C=2.0em @R=1.8em {
+    \lstick{\ket{0}} & \qw        & \qw                    & \targ     & \gate{U_A}                          & \meter \gategroup{1}{4}{3}{6}{1.1em}{-} \\
+    \lstick{\ket{0}} & \qw        & \qw                    & \qw       & \multigate{1}{\mathsf{F}_4^\dagger} & \meter \\
+    \lstick{\rho}    & \gate{U_g} \gategroup{3}{2}{3}{2}{.7em}{--} & \gate{U_R = T^\dagger} & \ctrl{-2} & \ghost{\mathsf{F}_4^\dagger}        & \meter
+}
+$$
+\end{document}

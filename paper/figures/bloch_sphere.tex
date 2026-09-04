@@ -1,0 +1,54 @@
+% Figure 2.1 -- the Bloch sphere. Caption lives in bsc-thesis.tex.
+%
+% Drawn standalone: this file loads tikz, its libraries and blochsphere itself,
+% and the thesis preamble carries none of the three -- nothing in the thesis
+% body draws with tikz.
+%
+% 11pt matches the thesis document class, and radius=4cm is the drawn size, so
+% the figure is included at natural size with no width= to rescale it.
+\documentclass[11pt, border=0pt]{standalone}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows,calc,math,angles,quotes}
+\usepackage{blochsphere}
+
+\newcommand{\ket}[1]{|#1\rangle}
+
+\begin{document}
+\def\rotationSphere{-105}
+\def\radiusSphere{4cm}
+\def\psiLat{45}
+\def\psiLon{45}
+\begin{blochsphere}[radius=\radiusSphere,opacity=0,rotation=\rotationSphere]
+  \drawLongitudeCircle[]{\rotationSphere}
+  \drawLatitudeCircle[style={dashed}]{0}
+  \labelLatLon{ket0}{90}{0};
+  \labelLatLon{ket1}{-90}{0};
+  \labelLatLon{ketminus}{0}{180};
+  \labelLatLon{ketplus}{00}{0};
+  \labelLatLon{ketpluspi2}{0}{-90};
+  \labelLatLon{ketplus3pi2}{0}{-270};
+  \labelLatLon{psi}{\psiLat}{-\psiLon};
+  \draw[-latex] (0,0) -- (ket0) node[above,inner sep=.5mm] at (ket0) {\footnotesize $z$};
+  \draw[-latex] (0,0) -- (ketplus) node[below,inner sep=.5mm] at (ketplus) {\footnotesize$x$};
+  \draw[-latex] (0,0) -- (ketpluspi2) node[below,inner sep=.5mm] at (ketpluspi2) {\footnotesize $y$};
+  \draw[-latex] (0,0) -- (psi) node[above]{\footnotesize $\ket{\psi}$};
+  \node[above, inner sep=2.25mm, yshift=0mm, xshift=1mm] at (ket0) {\footnotesize $\ket{0}$};
+  \node[below,inner sep=2mm] at (ket1) {\footnotesize $\ket{1}$};
+  \node[below right,inner sep=1mm] at (ketplus) {\footnotesize $\ket{+}$};
+  \node[below left,inner sep=-2mm, yshift=-2mm] at (ketminus) {\footnotesize $\ket{-}$};
+  \node[below right,inner sep=2mm, yshift=1mm] at (ketpluspi2) {\footnotesize $\ket{+i}$};
+  \node[ left,inner sep=2mm, yshift=-1mm] at (ketplus3pi2) {\footnotesize $\ket{-i}$};
+  \coordinate (origin) at (0,0);
+  {
+    \setDrawingPlane{0}{0}
+    \draw[current plane,dashed] (0,0) -- (-90+\psiLon:{cos(\psiLat)*\radiusSphere}) coordinate (psiProjectedEquat) -- (psi);
+    \pic[current plane, draw,fill=gray!50,fill opacity=.5, text opacity=1,"\footnotesize $\phi$", angle eccentricity=2.2]{angle=ketplus--origin--psiProjectedEquat};
+  }
+  { \setLongitudinalDrawingPlane{\psiLon}
+    \pic[current plane, draw,fill=gray!50,fill opacity=.5, text opacity=1,"\footnotesize $\theta$", angle eccentricity=1.5]{angle=psi--origin--ket0};
+  }
+\end{blochsphere}
+\end{document}

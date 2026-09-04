@@ -1,0 +1,481 @@
+\documentclass[border=5pt]{standalone}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{fadings}
+
+% Radial fading used for the blade "pearl" specular highlight: opaque at
+% the circle center, fully transparent at the circle's edge. Renders as a
+% soft round shine spot when applied as `path fading=glossspot` to a
+% filled circle.
+\tikzfading[name=glossspot,
+  inner color=transparent!0,
+  outer color=transparent!100]
+
+% --- Local macro shims (the standalone document does not load the thesis preamble)
+\newcommand{\Tgroup}{\mathcal{T}}
+\newcommand{\Ogroup}{\mathcal{O}}
+\newcommand{\Igroup}{\mathcal{I}}
+\newcommand{\TwoT}{2\Tgroup}
+\newcommand{\TwoO}{2\Ogroup}
+\newcommand{\TwoI}{2\Igroup}
+\newcommand{\phig}{\tau}
+\newcommand{\invphig}{\sigma}
+\newcommand{\ket}[1]{|#1\rangle}
+
+% --- View setup (matches platonic_solids.tex) -----------------------------
+\tdplotsetmaincoords{60}{120}
+\pgfmathsetmacro{\viewX}{sin(60)*sin(120)}
+\pgfmathsetmacro{\viewY}{-sin(60)*cos(120)}
+\pgfmathsetmacro{\viewZ}{cos(60)}
+
+% --- Geometry constants ---------------------------------------------------
+\pgfmathsetmacro{\PHI}{(1+sqrt(5))/2}
+\pgfmathsetmacro{\IPHI}{(sqrt(5)-1)/2}
+\pgfmathsetmacro{\TET}{1/sqrt(3)}
+\pgfmathsetmacro{\ICOS}{1/sqrt(2+\PHI)}
+\pgfmathsetmacro{\PHIICOS}{\PHI*\ICOS}
+\pgfmathsetmacro{\PHITET}{\PHI*\TET}
+\pgfmathsetmacro{\IPHITET}{\IPHI*\TET}
+
+% --- Vertex storage (matches platonic_solids.tex) -------------------------
+\newcommand{\PVert}[5]{%
+  \expandafter\edef\csname Vx#1at#2\endcsname{#3}%
+  \expandafter\edef\csname Vy#1at#2\endcsname{#4}%
+  \expandafter\edef\csname Vz#1at#2\endcsname{#5}%
+}
+\newcommand{\Vx}[2]{\csname Vx#1at#2\endcsname}
+\newcommand{\Vy}[2]{\csname Vy#1at#2\endcsname}
+\newcommand{\Vz}[2]{\csname Vz#1at#2\endcsname}
+
+% --- Vertex tables (copied verbatim from platonic_solids.tex) -------------
+
+% Tetrahedron: cube-inscribed, even sign parity, scaled 1/sqrt(3)
+\PVert{tet}{1}{\TET}{\TET}{\TET}
+\PVert{tet}{2}{-\TET}{-\TET}{\TET}
+\PVert{tet}{3}{-\TET}{\TET}{-\TET}
+\PVert{tet}{4}{\TET}{-\TET}{-\TET}
+
+% Cube: (+/-, +/-, +/-)/sqrt(3)
+\PVert{cube}{1}{-\TET}{-\TET}{-\TET}
+\PVert{cube}{2}{\TET}{-\TET}{-\TET}
+\PVert{cube}{3}{\TET}{\TET}{-\TET}
+\PVert{cube}{4}{-\TET}{\TET}{-\TET}
+\PVert{cube}{5}{-\TET}{-\TET}{\TET}
+\PVert{cube}{6}{\TET}{-\TET}{\TET}
+\PVert{cube}{7}{\TET}{\TET}{\TET}
+\PVert{cube}{8}{-\TET}{\TET}{\TET}
+
+% Octahedron: +-e_i
+\PVert{oct}{1}{1}{0}{0}
+\PVert{oct}{2}{-1}{0}{0}
+\PVert{oct}{3}{0}{1}{0}
+\PVert{oct}{4}{0}{-1}{0}
+\PVert{oct}{5}{0}{0}{1}
+\PVert{oct}{6}{0}{0}{-1}
+
+% Icosahedron: cyclic perms of (0, +-phi, +-1), scaled 1/sqrt(1+phi^2)
+\PVert{ico}{1}{\PHIICOS}{\ICOS}{0}
+\PVert{ico}{2}{-\PHIICOS}{\ICOS}{0}
+\PVert{ico}{3}{\PHIICOS}{-\ICOS}{0}
+\PVert{ico}{4}{-\PHIICOS}{-\ICOS}{0}
+\PVert{ico}{5}{0}{\PHIICOS}{\ICOS}
+\PVert{ico}{6}{0}{-\PHIICOS}{\ICOS}
+\PVert{ico}{7}{0}{\PHIICOS}{-\ICOS}
+\PVert{ico}{8}{0}{-\PHIICOS}{-\ICOS}
+\PVert{ico}{9}{\ICOS}{0}{\PHIICOS}
+\PVert{ico}{10}{-\ICOS}{0}{\PHIICOS}
+\PVert{ico}{11}{\ICOS}{0}{-\PHIICOS}
+\PVert{ico}{12}{-\ICOS}{0}{-\PHIICOS}
+
+% Dodecahedron: 8 cube vertices + cyclic perms of (0, +-1/phi, +-phi), all /sqrt(3)
+\PVert{dod}{1}{\TET}{\TET}{\TET}
+\PVert{dod}{2}{\TET}{\TET}{-\TET}
+\PVert{dod}{3}{\TET}{-\TET}{\TET}
+\PVert{dod}{4}{\TET}{-\TET}{-\TET}
+\PVert{dod}{5}{-\TET}{\TET}{\TET}
+\PVert{dod}{6}{-\TET}{\TET}{-\TET}
+\PVert{dod}{7}{-\TET}{-\TET}{\TET}
+\PVert{dod}{8}{-\TET}{-\TET}{-\TET}
+\PVert{dod}{9}{0}{\IPHITET}{\PHITET}
+\PVert{dod}{10}{0}{\IPHITET}{-\PHITET}
+\PVert{dod}{11}{0}{-\IPHITET}{\PHITET}
+\PVert{dod}{12}{0}{-\IPHITET}{-\PHITET}
+\PVert{dod}{13}{\IPHITET}{\PHITET}{0}
+\PVert{dod}{14}{\IPHITET}{-\PHITET}{0}
+\PVert{dod}{15}{-\IPHITET}{\PHITET}{0}
+\PVert{dod}{16}{-\IPHITET}{-\PHITET}{0}
+\PVert{dod}{17}{\PHITET}{0}{\IPHITET}
+\PVert{dod}{18}{\PHITET}{0}{-\IPHITET}
+\PVert{dod}{19}{-\PHITET}{0}{\IPHITET}
+\PVert{dod}{20}{-\PHITET}{0}{-\IPHITET}
+
+% --- POVM-specific helpers ------------------------------------------------
+
+% Project a stored vertex onto the camera direction; result in \NdotV.
+\newcommand{\vertexNdotV}[2]{%
+  \pgfmathsetmacro{\NdotV}{%
+    \Vx{#1}{#2}*\viewX + \Vy{#1}{#2}*\viewY + \Vz{#1}{#2}*\viewZ}%
+}
+
+% Edge: continuous depth gradient. Shade is computed from the average of
+% the two endpoints' n.v (proxy for "how front-facing is this edge on
+% average"). Mapped linearly into black!24..75, so a fully back edge reads
+% as a faint receding scaffold and a fully front edge reads as a
+% dark structural line, with everything in between sweeping smoothly.
+% Each edge is routed to backedges or frontedges layer by sign of \NdotVmid;
+% the front layer additionally takes a white preaction halo (width \haloW,
+% set per panel) so that foreground edges occlude crossed background edges.
+\newcommand{\drawEdge}[3]{%
+  \vertexNdotV{#1}{#2}\let\NdotVa\NdotV
+  \vertexNdotV{#1}{#3}\let\NdotVb\NdotV
+  \pgfmathsetmacro{\NdotVmid}{(\NdotVa + \NdotVb) / 2}%
+  \pgfmathsetmacro{\edgeShade}{int(round(max(24, min(75, 48 + 50*\NdotVmid))))}%
+  \pgfmathparse{\NdotVmid > 0 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \begin{pgfonlayer}{frontedges}
+      \draw[edge, draw=black!\edgeShade,
+            preaction={draw=white, line width=\haloW, line cap=round}]
+        (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) --
+        (\Vx{#1}{#3},\Vy{#1}{#3},\Vz{#1}{#3});
+    \end{pgfonlayer}
+  \else
+    \begin{pgfonlayer}{backedges}
+      \draw[edge, draw=black!\edgeShade,
+            preaction={draw=white, line width=\haloBackW, line cap=round}]
+        (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) --
+        (\Vx{#1}{#3},\Vy{#1}{#3},\Vz{#1}{#3});
+    \end{pgfonlayer}
+  \fi
+}
+
+% 3D blade arrow geometry. Each POVM ray is drawn as a 7-vertex flat
+% arrow polygon living in a specific plane in 3D space, not as a 2D stroke
+% that always faces the camera. Width axis w = normalize(v x U), where U
+% is a per-panel reference direction (\bladeUx, \bladeUy, \bladeUz). The
+% blade lies in the plane spanned by v and w. Because w is fixed in world
+% space, the camera foreshortens the blade by orientation: blades whose
+% width axis lies in the screen plane look wide; blades whose width axis
+% points along the camera direction look edge-on. Per-panel U is tuned so
+% that each panel's blades land at visually distinct widths without
+% disappearing edge-on:
+%   - Octahedron uses U = z_hat. This places +/-x and +/-y blades flat in
+%     the xy-plane (the axes the Pauli kets live on); +/-z rays fall back
+%     to w = y_hat (yz-plane).
+%   - Tetrahedron / Cube use U = (0,1,1)/sqrt(2). With U = z_hat the
+%     chiral (1,1,1)/sqrt(3) rays foreshorten too aggressively (one tet
+%     blade drops to ~7% width). Tilting U keeps the minimum tet width
+%     around 23%, so every blade reads as a blade.
+%
+% Shape: shaft + barbed arrowhead. Shoulder (where shaft ends and the head
+% begins) is at \bladeShoulderT along v; wings (head's widest point) are
+% at \bladeWingT, slightly *behind* the shoulder so the head has small
+% backward-swept barbs. The head tapers from the wing inward to the tip
+% at v. Shaft and arrowhead are a single closed polygon, so they merge
+% seamlessly. Half-widths are in 3D units (the enclosing scope rescales
+% by 2.6 for screen size).
+%
+% Fill: two-tone (lit + shadow) split across the centerline (the segment
+% from origin to v). Right half (+w side) is lighter, left half (-w side)
+% is darker, simulating a glossy blade lit from the +w direction. A crisp
+% black outline binds the whole polygon. The lit half is slightly more
+% translucent than the shadow half so the contrast reads as "shine" rather
+% than "two flat panels".
+\newcommand{\bladeShaftHalfW}{0.017}
+\newcommand{\bladeHeadHalfW}{0.048}
+\newcommand{\bladeShoulderT}{0.83}
+\newcommand{\bladeWingT}{0.78}
+
+% Default U = z_hat (octahedron default); panels override before drawing.
+\newcommand{\bladeUx}{0}
+\newcommand{\bladeUy}{0}
+\newcommand{\bladeUz}{1}
+
+\newcommand{\drawBlade}[2]{% {solidName}{vertexIdx}
+  \pgfmathsetmacro{\bvx}{\Vx{#1}{#2}}%
+  \pgfmathsetmacro{\bvy}{\Vy{#1}{#2}}%
+  \pgfmathsetmacro{\bvz}{\Vz{#1}{#2}}%
+  % w_raw = v x U. Normalize; fallback to (0,1,0) if v parallel to U.
+  \pgfmathsetmacro{\bwxr}{\bvy*\bladeUz - \bvz*\bladeUy}%
+  \pgfmathsetmacro{\bwyr}{\bvz*\bladeUx - \bvx*\bladeUz}%
+  \pgfmathsetmacro{\bwzr}{\bvx*\bladeUy - \bvy*\bladeUx}%
+  \pgfmathsetmacro{\bwn}{sqrt(\bwxr*\bwxr + \bwyr*\bwyr + \bwzr*\bwzr)}%
+  \pgfmathparse{\bwn > 0.01 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \pgfmathsetmacro{\bwx}{\bwxr/\bwn}%
+    \pgfmathsetmacro{\bwy}{\bwyr/\bwn}%
+    \pgfmathsetmacro{\bwz}{\bwzr/\bwn}%
+  \else
+    \pgfmathsetmacro{\bwx}{0}%
+    \pgfmathsetmacro{\bwy}{1}%
+    \pgfmathsetmacro{\bwz}{0}%
+  \fi
+  % Shaft / head offsets along w, shoulder / wing v-positions along v.
+  \pgfmathsetmacro{\bSx}{\bladeShaftHalfW*\bwx}%
+  \pgfmathsetmacro{\bSy}{\bladeShaftHalfW*\bwy}%
+  \pgfmathsetmacro{\bSz}{\bladeShaftHalfW*\bwz}%
+  \pgfmathsetmacro{\bHx}{\bladeHeadHalfW*\bwx}%
+  \pgfmathsetmacro{\bHy}{\bladeHeadHalfW*\bwy}%
+  \pgfmathsetmacro{\bHz}{\bladeHeadHalfW*\bwz}%
+  \pgfmathsetmacro{\bShx}{\bladeShoulderT*\bvx}%
+  \pgfmathsetmacro{\bShy}{\bladeShoulderT*\bvy}%
+  \pgfmathsetmacro{\bShz}{\bladeShoulderT*\bvz}%
+  \pgfmathsetmacro{\bWx}{\bladeWingT*\bvx}%
+  \pgfmathsetmacro{\bWy}{\bladeWingT*\bvy}%
+  \pgfmathsetmacro{\bWz}{\bladeWingT*\bvz}%
+  % All blades go to `bladelayer` (between backedges and frontedges) so
+  % the polytope front edges with their white halos render on top.
+  \begin{pgfonlayer}{bladelayer}\drawBladePoly\end{pgfonlayer}
+}
+
+% Gel-button blade: solid base + specular sheen + outline.
+% Base fill covers the full polygon. The sheen is a white-to-dark gradient
+% applied to the +w half polygon, with `shading angle` chosen so the bright
+% end of the gradient sits at the +w outer edge in screen space. For
+% tdplot's (theta=60, phi=120) view, the screen projection of a 3D
+% direction (wx, wy, wz) is approximately
+%   screen_x = -0.866 wx - 0.5 wy
+%   screen_y = 0.25 wx - 0.433 wy + 0.866 wz,
+% so atan2(screen_y, screen_x) gives the +w screen-space angle; subtracting
+% 90 deg converts to a TikZ shading angle (default "top" is at +y/north).
+\newcommand{\drawBladePoly}{%
+  % Base fill (full polygon).
+  \fill[bladebase]
+    (-\bSx,-\bSy,-\bSz) --
+    (\bSx,\bSy,\bSz) --
+    (\bShx+\bSx,\bShy+\bSy,\bShz+\bSz) --
+    (\bWx+\bHx,\bWy+\bHy,\bWz+\bHz) --
+    (\bvx,\bvy,\bvz) --
+    (\bWx-\bHx,\bWy-\bHy,\bWz-\bHz) --
+    (\bShx-\bSx,\bShy-\bSy,\bShz-\bSz) --
+    cycle;
+  % Per-blade fading angle. The sheen should run perpendicular to the
+  % projected ray direction in screen, with its opaque end on the side
+  % where +w lands. We can't just use the projected +w direction, since
+  % 3D perpendicularity (v perp w) doesn't survive the projection -- for
+  % thin foreshortened blades that puts the gradient diagonally across the
+  % long axis. Instead, project v, take its screen-perpendicular, and pick
+  % the perpendicular's sign from the projection of w.
+  \pgfmathsetmacro{\bvSx}{-0.866*\bvx - 0.5*\bvy}%
+  \pgfmathsetmacro{\bvSy}{0.25*\bvx - 0.433*\bvy + 0.866*\bvz}%
+  \pgfmathsetmacro{\bwSx}{-0.866*\bwx - 0.5*\bwy}%
+  \pgfmathsetmacro{\bwSy}{0.25*\bwx - 0.433*\bwy + 0.866*\bwz}%
+  % Does +w project to the (-vSy, vSx) side of v in screen?
+  \pgfmathsetmacro{\bSheenSign}{(\bwSy*\bvSx - \bwSx*\bvSy) > 0 ? 1 : -1}%
+  \pgfmathsetmacro{\bSheenAng}{atan2(\bSheenSign*\bvSx, -\bSheenSign*\bvSy) - 90}%
+  % Soft sheen overlay on +w half polygon: white fill that fades from
+  % opaque (at the +w outer edge) to fully transparent (at the centerline),
+  % so the centerline blends seamlessly into the dark base. This is the
+  % broad "ambient lit half" component.
+  \fill[bladesheenSoft, fading angle=\bSheenAng]
+    (\bSx,\bSy,\bSz) --
+    (\bShx+\bSx,\bShy+\bSy,\bShz+\bSz) --
+    (\bWx+\bHx,\bWy+\bHy,\bWz+\bHz) --
+    (\bvx,\bvy,\bvz) --
+    (0,0,0) --
+    cycle;
+  % Outline first, so the stripe (drawn after) sits on top of the +w
+  % outer edge instead of being clipped by the dark stroke.
+  \draw[bladeoutline]
+    (-\bSx,-\bSy,-\bSz) --
+    (\bSx,\bSy,\bSz) --
+    (\bShx+\bSx,\bShy+\bSy,\bShz+\bSz) --
+    (\bWx+\bHx,\bWy+\bHy,\bWz+\bHz) --
+    (\bvx,\bvy,\bvz) --
+    (\bWx-\bHx,\bWy-\bHy,\bWz-\bHz) --
+    (\bShx-\bSx,\bShy-\bSy,\bShz-\bSz) --
+    cycle;
+  % Pearl specular highlight: a single radial shine spot anchored at the
+  % shoulder-right corner of the +w outer edge (where the shaft meets the
+  % head's barb -- visually the most distinctive point of the lit silhouette).
+  % The circle is filled with the `glossspot` radial fading so the spot is
+  % opaque at center and smoothly fades to transparent at the perimeter,
+  % then clipped to the full polygon so any overflow past the blade's edges
+  % is trimmed cleanly. Drawn AFTER the outline so it sits on top.
+  \begin{scope}
+    \clip
+      (-\bSx,-\bSy,-\bSz) --
+      (\bSx,\bSy,\bSz) --
+      (\bShx+\bSx,\bShy+\bSy,\bShz+\bSz) --
+      (\bWx+\bHx,\bWy+\bHy,\bWz+\bHz) --
+      (\bvx,\bvy,\bvz) --
+      (\bWx-\bHx,\bWy-\bHy,\bWz-\bHz) --
+      (\bShx-\bSx,\bShy-\bSy,\bShz-\bSz) --
+      cycle;
+    \fill[bladesheenPearl]
+      (\bShx+\bSx,\bShy+\bSy,\bShz+\bSz) circle (2.6mm);
+  \end{scope}
+}
+
+% Bloch ray (3D blade) + vertex disk. Blade depth-routed via \drawBlade;
+% disks keep their original front/back treatment (back disks smaller at
+% 0.85x, lighter). Disk drawn after the blade so it caps the tip.
+\newcommand{\drawRayDisk}[3]{% {solidName}{vertexIdx}{diskRadius_mm}
+  \drawBlade{#1}{#2}%
+  \vertexNdotV{#1}{#2}%
+  \pgfmathparse{\NdotV>0 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \fill[diskfront]
+      (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) circle (#3mm);
+  \else
+    \pgfmathsetmacro{\backR}{#3*0.85}%
+    \fill[diskback]
+      (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) circle (\backR mm);
+  \fi
+}
+
+% Disk only (no ray). Used in the icosahedron and dodecahedron panels,
+% where 12-20 rays would starburst across the polytope interior.
+\newcommand{\drawDisk}[3]{% {solidName}{vertexIdx}{diskRadius_mm}
+  \vertexNdotV{#1}{#2}%
+  \pgfmathparse{\NdotV>0 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \fill[diskfront]
+      (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) circle (#3mm);
+  \else
+    \pgfmathsetmacro{\backR}{#3*0.85}%
+    \fill[diskback]
+      (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) circle (\backR mm);
+  \fi
+}
+
+% Six Pauli-eigenstate labels on the unit sphere. Anchors push each label outward
+% along its screen-projected axis direction (computed for the {60}{120} view), so
+% labels sit just outside the silhouette where possible. Drawn last so they sit on top.
+\newcommand{\PauliLabels}{%
+  \node[font=\scriptsize, anchor=south]      at (0,0,1)  {$\ket{0}$};
+  \node[font=\scriptsize, anchor=north]      at (0,0,-1) {$\ket{1}$};
+  \node[font=\scriptsize, anchor=north east] at (1,0,0)  {$\ket{+}$};
+  \node[font=\scriptsize, anchor=south west] at (-1,0,0) {$\ket{-}$};
+  \node[font=\scriptsize, anchor=west]       at (0,1,0)  {$\ket{{+}i}$};
+  \node[font=\scriptsize, anchor=east]       at (0,-1,0) {$\ket{{-}i}$};
+}
+
+% Short radial nubs at the front piercings of +x, +y, +z. Used in panels where
+% the Pauli-eigenstate kets read as vertex labels and would create ambiguity;
+% nubs supply orientation without text.
+\newcommand{\AxisNubs}{%
+  \draw[axisnub] (1,0,0) -- (1.06,0,0);
+  \draw[axisnub] (0,1,0) -- (0,1.06,0);
+  \draw[axisnub] (0,0,1) -- (0,0,1.06);
+}
+
+% --- Edge layers + halo width --------------------------------------------
+% Two declared layers split edges by depth so foreground edges always render
+% after background edges, regardless of source order. The white preaction on
+% the front layer (controlled by \haloW, set per panel) knocks out crossed
+% background edges at intersections.
+\pgfdeclarelayer{backedges}
+\pgfdeclarelayer{bladelayer}
+\pgfdeclarelayer{frontedges}
+\pgfsetlayers{backedges,bladelayer,frontedges,main}
+\newcommand{\haloW}{0pt}
+\newcommand{\haloBackW}{0pt}
+\newcommand{\haloFrontEqW}{0pt}
+
+% --- TikZ styles ----------------------------------------------------------
+% Style values are visual-iteration tunables. Edge shading is continuous:
+% \drawEdge maps the midpoint n.v of each edge into black!35..75 so depth
+% reads as a smooth gradient rather than discrete tiers (see the macro for
+% the mapping). Disk fill, the 0.85 back-disk scale, and the blade opacity
+% also control depth contrast.
+%
+% The blade style is the fill+stroke applied to the 3D POVM arrow polygons
+% built by \drawBlade. Glossy-black: translucent black fill + thin black
+% outline. Translucency (fill opacity 0.35) lets the wireframe behind show
+% through; the outline keeps the blade's silhouette crisp at any
+% foreshortening angle, even when the blade is nearly edge-on.
+\tikzset{
+  edge/.style           = {line width=0.4pt, line cap=round},
+  bladebase/.style        = {fill=black, fill opacity=0.75},
+  bladesheenSoft/.style   = {fill=white, fill opacity=0.2, path fading=north},
+  bladesheenPearl/.style  = {fill=white, fill opacity=0.5, path fading=glossspot},
+  bladeoutline/.style   = {draw=black, draw opacity=0.95,
+                           line width=0.32pt, line join=round, line cap=round},
+  axis/.style           = {draw=black!22, line width=0.3pt, line cap=round, dotted},
+  axisnub/.style        = {draw=black!55, line width=0.5pt, line cap=round},
+  diskfront/.style      = {fill=black},
+  diskback/.style       = {fill=black!35},
+  povmsphere/.style     = {draw=black!45, line width=0.35pt},
+  povmsphereback/.style = {draw=black!22, line width=0.35pt},
+  rowlabel/.style       = {anchor=east, font=\normalsize},
+  panelname/.style      = {anchor=north, font=\footnotesize},
+}
+
+% --- Per-panel macros -----------------------------------------------------
+% \PanelHeader opens an outer xshift/yshift scope, draws the screen-plane
+% silhouette, and opens an inner tdplot scope. \PanelFooter closes the
+% inner scope, places the name + info block, and closes the outer scope.
+% Three coordinate axes through origin, drawn dotted-faint as orientation guides.
+% Treated uniformly as scaffolding "behind" the polytope: negative halves go
+% to backedges, positive halves to frontedges -- so polytope edges in the
+% same layer overdraw the axes (drawn first within the layer via PanelHeader),
+% and front-edge halos chop them at crossings. Geometrically not exact at
+% every point (axes are diameters through origin, so depth along each half
+% varies from 0 at origin to viewN at the unit sphere), but it's the correct
+% direction of approximation: an axis interior is inside the unit sphere and
+% is more often behind front polytope structure than in front of it.
+\newcommand{\Axes}{%
+  \begin{pgfonlayer}{backedges}
+    \draw[axis] (-1,0,0) -- (0,0,0);
+    \draw[axis] (0,-1,0) -- (0,0,0);
+    \draw[axis] (0,0,-1) -- (0,0,0);
+  \end{pgfonlayer}
+  \begin{pgfonlayer}{frontedges}
+    \draw[axis] (0,0,0) -- (1,0,0);
+    \draw[axis] (0,0,0) -- (0,1,0);
+    \draw[axis] (0,0,0) -- (0,0,1);
+  \end{pgfonlayer}
+}
+
+% Equator (xy-plane great circle): solid arc for the camera-facing half,
+% faded solid for the far side (no dashes -- matches the edge treatment).
+% Front/back boundary at theta = -60, +120 deg for the {60}{120} view
+% (camera direction (0.75, 0.433, 0.5)).
+% Asymmetric depth routing: the back arc goes to backedges so polytope edges
+% render over it, the front arc stays in main so it draws over polytope
+% edges and is not knocked out by their white halos at crossings. The front
+% arc additionally takes a white halo (\haloFrontEqW) so that polytope edges
+% are cleanly broken where they cross the equator -- geometrically correct
+% since the equator lies on the unit sphere and polytope chords are inside.
+\newcommand{\Equator}{%
+  \draw[povmsphere,
+        preaction={draw=white, line width=\haloFrontEqW, line cap=round}]
+    plot[domain=-60:120, samples=37, variable=\t, smooth]
+    ({cos(\t)},{sin(\t)},0);
+  \begin{pgfonlayer}{backedges}
+    \draw[povmsphereback]
+      plot[domain=120:300, samples=37, variable=\t, smooth]
+      ({cos(\t)},{sin(\t)},0);
+  \end{pgfonlayer}
+}
+
+% The panel radius in TikZ units.  Figure 2.2 draws at 2.6; a consumer that
+% needs a different size renews this rather than copying the macros, so every
+% panel everywhere stays one drawing (\renewcommand{\PanelScale}{2.47}).
+\newcommand{\PanelScale}{2.6}
+
+\newcommand{\PanelHeader}[2]{%
+  \begin{scope}[xshift=#1mm, yshift=#2mm]
+  \begin{scope}[scale=\PanelScale, tdplot_main_coords]%
+  \Axes
+  \Equator
+}
+
+% Variant for panels whose vertices don't touch the equator (just the tetrahedron):
+% draws an outer silhouette circle to give the sphere a clear extent.
+\newcommand{\PanelHeaderSil}[2]{%
+  \begin{scope}[xshift=#1mm, yshift=#2mm]
+  \draw[povmsphere] (0,0) circle (\PanelScale);
+  \begin{scope}[scale=\PanelScale, tdplot_main_coords]%
+  \Axes
+  \Equator
+}
+
+\newcommand{\PanelFooter}[1]{% {panelTitle}
+  \end{scope}% close inner tdplot scope
+  \node[panelname] at (0, -2.85) {#1};
+  \end{scope}% close outer xshift scope
+}
+

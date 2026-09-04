@@ -1,0 +1,143 @@
+% The three doors -- the coin, the discard, the retry. Caption lives in
+% bsc-thesis.tex.
+%
+% Three miniature protocol trees for Figure D.6: why the octahedron's exactness
+% has to be bought with a coin (Appendix D.1). They are near-identical on purpose: all three fan the same
+% three atlas words {1, F, F^dagger} (bold in print: symmetrized) into the same Z readout, and they differ
+% in exactly ONE edge -- the fourth branch, absent / discarded / retried. The
+% line of maths under each panel is the same 1/3 bought three ways.
+%
+% Standalone like every other drawing in this directory. tikz and its
+% libraries are loaded HERE: nothing in the thesis body draws with tikz, so the
+% preamble does not carry them either (see bloch_sphere.tex). \Id is
+% redefined locally exactly as _circuit_preamble.tex does it.
+%
+% 11pt matches the thesis document class, so the type inside is the size it
+% would be inline, and the figure is included at natural size with no width=
+% to rescale it -- rescaling would drag the 8pt labels below legibility. The
+% column pitch below is therefore not a round number: it is the value that
+% lands the box at 0.95\textwidth of the thesis (\textwidth = 452.9679pt, so
+% 430.32pt), which is the width this figure was drawn to occupy.
+%
+% One label per repeated part, on the leftmost sibling. The branch weight sits
+% on the leftmost ARM and the $Z$ inside the leftmost FORK, so both read as
+% "and likewise for the others" by the same convention. The $Z$ has to be
+% inside its fork's V, not between two forks, or it reads as labelling one
+% prong of whichever fork it is nearest. It only just fits: the glyph box is
+% 6.325pt x 5.467pt (measured), and at \Px/\Py = 0.26/0.34 the V left it no
+% air at all, which is why the prongs are 0.28/0.36 -- a hair longer and
+% wider, same 4mm-ish stroke, and now 1.3pt of clearance at the glyph's
+% widest point.
+%
+% Layout note. Panels 2 and 3 carry a fourth branch and panel 1 does not, so
+% the three are not equally wide, and the two possible readings of "centred"
+% pull apart: aligning the three roots on one pitch leaves the right-hand rule
+% almost touching "discarded", while centring each panel's own ink in an
+% equal-width cell reads clean. The second was chosen after rendering both --
+% the cost is that the roots sit at slightly different offsets within their
+% cells, which is invisible across a dividing rule.
+%
+% The border is {left bottom right top}, measured not guessed. TikZ declares
+% its box to the ink here, within 0.15bp, so these four numbers ARE the white
+% margin -- and it is not uniform: 4.41 left and bottom, 2.80 right, 3.99 top.
+% Mind the units: gs and the PDF work in big points, the thesis log in TeX
+% points. Ink 421.50 x 102.92bp inside a 428.71 x 111.32bp page = 430.32 x
+% 111.74pt = 15.12cm x 3.93cm. Re-measure if the drawing changes shape: build
+% at a large known border, ask `gs -sDEVICE=bbox` for the ink box, and the
+% difference per side is what the border has to cover.
+\documentclass[11pt, border={4.438pt 4.288pt 2.820pt 4.001pt}]{standalone}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\newcommand{\Id}{\mathbbm{1}}
+
+% --- Panel geometry, in cm --------------------------------------------------
+\newcommand{\Wx}{1.05}   % half-spread of the three word nodes
+\newcommand{\Dy}{1.10}   % depth of the word row below the root
+\newcommand{\Fx}{2.30}   % fourth branch, x -- far enough right that the arm
+\newcommand{\Gy}{-0.80}  % and "discarded" both clear the F^dagger node
+\newcommand{\Px}{0.28}   % readout fork prong, horizontal (4.6mm stroke)
+\newcommand{\Py}{0.36}   % readout fork prong, vertical -- sized so the $Z$
+\newcommand{\Zy}{-0.30}  % clears both prongs by 1.3pt at its widest
+\newcommand{\Hy}{0.80}   % header row
+\newcommand{\Fy}{-2.45}  % formula row
+\newcommand{\Ry}{0.93}   % separator rules: sized to just contain the panels,
+\newcommand{\Rz}{-2.69}  % so they, not the type, fix the ink box vertically
+
+% --- Cell layout: equal cells of 5.79134cm, each panel's ink centred in its
+% own. Solved, not eyeballed: the panels' ink half-widths follow from the
+% measured label boxes (\settowidth at the figure's own sizes -- "discarded"
+% 34.999pt, the retry formula 70.383pt, and so on), and the cell width is the
+% one that puts the total ink at 0.95\textwidth once the border is added.
+\newcommand{\Oa}{2.8957}
+\newcommand{\Ob}{7.9121}
+\newcommand{\Oc}{13.9224}
+\newcommand{\Sa}{5.7913}
+\newcommand{\Sb}{11.5827}
+
+\tikzset{
+  root/.style={circle, fill=black, inner sep=0pt, minimum size=2.6pt},
+  word/.style={circle, draw, inner sep=0pt, minimum size=5.2mm, font=\footnotesize},
+  leaf/.style={rectangle, fill=black, inner sep=0pt, minimum size=2.0pt},
+  door/.style={circle, draw, inner sep=0pt, minimum size=3.4mm},
+  cross/.style={inner sep=3.4pt},   % empty node; its corners draw the \times
+  lab/.style={font=\scriptsize, inner sep=1.6pt},
+  head/.style={font=\footnotesize, inner sep=0pt},
+  form/.style={font=\footnotesize, inner sep=0pt},
+  sep/.style={draw=black!22, line width=0.3pt},
+}
+
+% \tree{x offset}{header}{outer-arm label}{formula} -- the part all three share.
+\newcommand{\tree}[4]{%
+  \begin{scope}[xshift=#1 cm]
+    \node[head] at (0,\Hy) {#2};
+    \node[root] (r) at (0,0) {};
+    \node[word] (a) at (-\Wx,-\Dy) {$\Id$};
+    \node[word] (b) at (0,-\Dy) {$\mathbf{F}$};
+    \node[word] (c) at (\Wx,-\Dy) {$\mathbf{F}^\dagger$};
+    \draw (r) -- node[lab, left] {#3} (a);
+    \draw (r) -- (b);
+    \draw (r) -- (c);
+    \foreach \n in {a,b,c}{%
+      \draw (\n.south) -- ++(-\Px,-\Py) node[leaf] {};
+      \draw (\n.south) -- ++(\Px,-\Py) node[leaf] {};
+    }
+    \path (a.south) ++(0,\Zy) node[lab, inner sep=0pt] {$Z$};
+    \node[form] at (0,\Fy) {#4};
+  \end{scope}
+}
+
+\begin{document}
+\begin{tikzpicture}[line width=0.4pt, >={Latex[length=3.2pt, width=2.6pt]}]
+
+  \draw[sep] (\Sa,\Ry) -- (\Sa,\Rz);
+  \draw[sep] (\Sb,\Ry) -- (\Sb,\Rz);
+
+  % --- 1. the coin: three branches, weight 1/3 apiece, nothing else ---------
+  \tree{\Oa}{the coin}{$\tfrac13$}{$p_b = \tfrac13$}
+
+  % --- 2. the discard: a fourth dyadic branch, thrown away ------------------
+  \tree{\Ob}{the discard}{$\tfrac14$}{$\tfrac14 \big/ \tfrac34 = \tfrac13$}
+  \begin{scope}[xshift=\Ob cm]
+    \node[cross] (x4) at (\Fx,\Gy) {};
+    \draw[dashed, dash pattern=on 1.6pt off 1.4pt] (r) -- (x4);
+    \draw (x4.south west) -- (x4.north east);
+    \draw (x4.north west) -- (x4.south east);
+    \node[lab, below] at (x4.south) {discarded};
+  \end{scope}
+
+  % --- 3. the retry: the same fourth branch, run as a series instead --------
+  \tree{\Oc}{the retry}{$\tfrac14$}{$\sum_{n \ge 0} (\tfrac14)^{n+1} = \tfrac13$}
+  \begin{scope}[xshift=\Oc cm]
+    \node[door] (d4) at (\Fx,\Gy) {};
+    \draw (r) -- (d4);
+    \draw[->] (d4) to[out=85, in=25, looseness=1.0]
+      node[lab, above, pos=0.5] {try again} (r);
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}

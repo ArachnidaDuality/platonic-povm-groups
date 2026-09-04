@@ -1,0 +1,86 @@
+% Appendix D, Figure D.4 --- "The icosahedral POVM, end to end".  The layout only.
+%
+% Layout: card_oct_body.tex's header is binding.  Deviations from it, and only
+% they, are listed here.
+%
+%   * band 1 NESTS the worked $E_1$ under the two vertex blocks, in the slack
+%     the sphere leaves beside them -- zero words, and it is what gives the
+%     covariance rule $E_{g(k)} = U_g E_k U_g^\dagger$ an effect to act on.
+%     It costs 0pt: the panel, not the right column, sets the row.
+%   * the vertex blocks carry no effect column (twelve two-line pmatrices do
+%     not fit beside a panel), which is why the worked effect is printed.
+%   * band 2 runs 377pt + 75pt: the circuit is 375.032bp and the side column
+%     holds $B$ and $C$ -- the two matrices that DIFFER between this card and
+%     the dodecahedron's.  The unfactored $A$, which the pair shares, is the
+%     chapter head's (assertion 32 refuses to write this card until it is
+%     there).  Measured: A on the card costs 43.81pt.
+%   * head 4 carries ", rightmost factor first": this card prints two
+%     composite atlas words and the order decides the rotation (19c).
+%   * band 4's protocol line carries the two-jobs sentence: a full 2T draw
+%     realizes AND twirls -- Appendix F.3.3's crossing card.  Check 19d backs
+%     it and keeps that phrase off the other four, which carry their own rung
+%     of the same ladder.  This is the card where the coin (six words) and
+%     the draw (T's twelve rotations) part company in size and not in
+%     verdict, so the sentence names the DRAW and never the ray list above
+%     it.
+% All macros below are \def and therefore local to the figure environment.
+\parindent=0pt \parskip=0pt
+\input{../code/data/card_icos_data}
+\long\def\NIS#1{\vskip #1\nointerlineskip}
+\long\def\CTR#1#2{\hbox to #1{\hss #2\hss}}
+\long\def\PBOX#1#2{\vtop{\hsize=#1\parindent0pt\sloppy\emergencystretch=1.5em\small #2}}
+\long\def\COL#1#2{\vtop{\hsize=#1\parindent0pt\hbox{}\nointerlineskip #2}}
+\long\def\FULLHEAD#1#2#3{\hbox to \hsize{\small\textbf{#1}\,#2\hfil{\footnotesize #3}}}
+\def\BANDRULE{\vskip2pt\hrule height0.5pt\vskip1.5pt\nointerlineskip}
+\long\def\TAB#1{{\small\renewcommand{\arraystretch}{0.88}\setlength{\tabcolsep}{3pt}#1}}
+%
+\vbox{\hsize\textwidth\parindent0pt
+%
+% --- title and the header strip: Figure 1.1's own row -----------------------
+\hbox to \hsize{\large\bfseries \CTitle\hfil{\normalfont\footnotesize \CPtrStrip}}%
+\NIS{5pt}%
+\hbox{\CStrip}%
+\BANDRULE
+%
+% --- band 1: the object -----------------------------------------------------
+\FULLHEAD{1}{\CHeadA}{\CPtrA}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{170pt}{\CTR{170pt}{\includegraphics{figures/card_icos_sphere.pdf}}}%
+  \hfil
+  \COL{277pt}{\hbox to 277pt{\hfil\TAB{\CardVertexBlockA}\hskip10pt\TAB{\CardVertexBlockB}}%
+    \NIS{4pt}\PBOX{277pt}{\CIdentB}}%
+}%
+\NIS{4pt}%
+\PBOX{\hsize}{\CIdent}%
+\BANDRULE
+%
+% --- band 2: the machine ----------------------------------------------------
+\FULLHEAD{2}{\CHeadB}{\CPtrB}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{377pt}{\hbox to 377pt{\includegraphics{figures/card_dec_icos.pdf}\hss}}%
+  \hfil
+  \COL{75pt}{\small\CardSide}%
+}%
+\NIS{5pt}%
+\PBOX{\hsize}{\CParams}%
+\BANDRULE
+%
+% --- band 3: the readout ----------------------------------------------------
+\FULLHEAD{3}{\CHeadC}{\CPtrC}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{200pt}{\TAB{\CardKey}}%
+  \hfil
+  \COL{244pt}{\PBOX{244pt}{\CKappa}}%
+}%
+\BANDRULE
+%
+% --- band 4: the alternative ------------------------------------------------
+\FULLHEAD{4}{\CHeadD}{\CPtrD}%
+\NIS{5pt}%
+\PBOX{\hsize}{\CRays}%
+\NIS{2pt}%
+\PBOX{\hsize}{\CCoin}%
+}%

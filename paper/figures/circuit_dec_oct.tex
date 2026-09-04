@@ -1,0 +1,14 @@
+% The octahedral POVM circuit (Decker Fig. 11), reoriented: the frozen pose of
+% record --- code/_build_povm_cards.py grid-diffs card_dec_oct.tex against it.
+% The \gategroup fences Decker's published block; the reorientation sits
+% outside it, so what the fence encloses stays his circuit as published.
+\input{_circuit_preamble}
+\begin{document}
+$$
+\Qcircuit @C=2.0em @R=1.8em {
+    \lstick{\ket{0}} & \qw        & \targ     & \gate{U_A}                                    & \meter \gategroup{1}{3}{3}{5}{1.1em}{-} \\
+    \lstick{\ket{0}} & \qw        & \qw       & \multigate{1}{\mathsf{F}_3^\dagger \oplus I_1} & \meter \\
+    \lstick{\rho}    & \gate{R_{\hat z}(180^\circ)R_{\hat y}(-\arccos(1/\sqrt3))R_{\hat z}(-45^\circ)} & \ctrl{-2} & \ghost{\mathsf{F}_3^\dagger \oplus I_1}        & \meter
+}
+$$
+\end{document}

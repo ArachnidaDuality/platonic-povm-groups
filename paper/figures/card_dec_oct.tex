@@ -1,0 +1,32 @@
+% Appendix D, the octahedral card, band 2 --- Decker Fig. 11 as the card draws it.
+%
+% circuit_dec_oct.tex with exactly three differences, and the generator
+% (code/_build_povm_cards.py, assertion 14) token-diffs this file against that
+% one and admits no others:
+%   (i)   one inserted column on the data row carrying the optional pre-rotation
+%         \gate{U_g}, fenced by its own dashed \gategroup{3}{2}{3}{2}{.7em}{--};
+%   (ii)  the reorientation drawn as the named box \gate{U_R} --- the chapter
+%         head's "written $U_R$" made literally true --- with the rotation
+%         product it stands for printed in the card's parameter column, which is
+%         what takes this circuit from 388.12bp to 259.65bp;
+%   (iii) the solid \gategroup's column indices shifted by exactly +1 for the
+%         inserted column.
+% Both new gates sit OUTSIDE the solid \gategroup, which still fences Decker's
+% published block exactly as before: reorient Decker to the atlas, never the
+% reverse -- what the fence encloses must stay Decker's circuit as published.
+% The pose is unchanged and the generator proves it numerically, not by care.
+%
+% Set flush left on the card, never centred: all of xy-pic's ~13.7bp of slack is
+% on the right, and _circuit_preamble's border={14pt 0.5pt 14pt 0.5pt} is what
+% keeps the \lstick |0> and rho labels from being clipped.  Include at natural
+% size --- no width=.
+\input{_circuit_preamble}
+\begin{document}
+$$
+\Qcircuit @C=2.0em @R=1.8em {
+    \lstick{\ket{0}} & \qw        & \qw       & \targ     & \gate{U_A}                                    & \meter \gategroup{1}{4}{3}{6}{1.1em}{-} \\
+    \lstick{\ket{0}} & \qw        & \qw       & \qw       & \multigate{1}{\mathsf{F}_3^\dagger \oplus I_1} & \meter \\
+    \lstick{\rho}    & \gate{U_g} \gategroup{3}{2}{3}{2}{.7em}{--} & \gate{U_R} & \ctrl{-2} & \ghost{\mathsf{F}_3^\dagger \oplus I_1}        & \meter
+}
+$$
+\end{document}

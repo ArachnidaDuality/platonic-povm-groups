@@ -1,0 +1,29 @@
+Licensing of this repository
+============================
+
+Two licenses apply, by kind of content.
+
+1. Code, notebooks and data -- MIT (see LICENSE).
+   Everything under code/, including the generated .tex fragments, the .npz data files, the
+   notebooks and their committed outputs; extras/lean-exactness/ (the Lean 4 formalization);
+   extras/spinning_solids.py; and the scene content of extras/povms.html.
+
+2. The thesis -- Creative Commons Attribution 4.0 International (CC BY 4.0).
+   The manuscript paper/bsc-thesis.tex and its PDF, the figure sources and PDFs under
+   paper/figures/, the bibliography file, and the expose extras/math/exactness-slow-walk.{tex,pdf}.
+   License text: https://creativecommons.org/licenses/by/4.0/legalcode
+   (SPDX identifier CC-BY-4.0). Attribution: cite the thesis as given in CITATION.cff.
+
+Not covered by either license (third-party material, used with its own terms):
+
+- paper/figures/jku_en_black.pdf is the logo of Johannes Kepler University Linz, a trademark of
+  the university. It is reproduced on the cover as the university's thesis template requires and
+  may not be reused under the licenses above.
+- The `abstract` fields in paper/bibliography.bib reproduce the abstracts of the cited works;
+  they remain the property of their respective authors and publishers.
+- extras/povms.html is a standalone K3D snapshot: it embeds the K3D-jupyter viewer and the
+  Three.js library, each distributed under its own MIT license by its own authors.
+- The Lean formalization depends on Mathlib (Apache 2.0), which is fetched at build time and is
+  not part of this repository.
+
+Copyright (c) 2026 Anton Atanasov Dandarov.

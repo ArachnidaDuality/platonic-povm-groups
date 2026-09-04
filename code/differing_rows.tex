@@ -1,0 +1,53 @@
+% Auto-generated: Appendix B, the rows of 2I where BFS and Dijkstra differ.
+% Include this file in your document with \input{...}.
+% Requires: \usepackage{booktabs, float, hyperref} and the thesis macro \TwoI.
+
+% LAYOUT: atlas.tex's, minus the per-pair columns, so a row carries over.
+% One row per element, keyed by its atlas row -- # is the pair number and a/b
+% of Table A.3, and a link to that row, which carries a superscript B linking
+% back here -- then two word blocks, min depth (BFS) and min Phi (Dijkstra),
+% of Depth, Phi count, Sequence and phase, then the element's own signed
+% quaternion (Table A.3 prints +-q once per pair, which is no use here: the two
+% members of a pair are rows apart). Rows run by BFS Phi count, so the caption's
+% 13-and-4 split reads down the page, then by # inside a tier, so a key can be
+% found by eye.
+
+% CONVENTIONS: atlas.tex's, and the same emitters -- sequences in operator order,
+% bold for the symmetrized SU(2) gates, the dagger the SU(2) inverse, $\varphi$
+% the WORD's phase with $\varphi = \omega^k$, $\omega = e^{i\pi/4}$. Phase is per
+% block here and the two blocks disagree on it on every row, so the atlas's
+% $\varphi$ (Dijkstra's) is the wrong one for the BFS word. atlas.txt keeps the
+% full 2x2 synthesis grid these two blocks are two quarters of.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{r c c l c c c l c l}
+\toprule
+\# & \multicolumn{4}{c}{Min depth (BFS)} & \multicolumn{4}{c}{Min $\Phi$ (Dijkstra)} & Quaternion \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & Depth & $\Phi$ & Sequence & $\varphi$ & Depth & $\Phi$ & Sequence & $\varphi$ & $q$ \\
+\midrule
+  \hyperlink{atlas:2I:55b}{55b} & 3 & 3 & $\Phi^{\dagger}\Phi^{\dagger}\Phi^{\dagger}$ & $1$ & 4 & 1 & $\mathbf{F}\mathbf{X}\Phi^{\dagger}\mathbf{Z}^{\dagger}$ & $\omega$ & $\tfrac{1}{2}({-\sigma},\, {-1},\, {-\tau},\, 0)$ \\
+  \hyperlink{atlas:2I:59b}{59b} & 3 & 3 & $\Phi\Phi\Phi$ & $1$ & 4 & 1 & $\mathbf{X}\mathbf{Z}\Phi^{\dagger}\mathbf{F}^{\dagger}$ & $\omega^{3}$ & $\tfrac{1}{2}({-\sigma},\, 1,\, \tau,\, 0)$ \\
+  \hyperlink{atlas:2I:50a}{50a} & 3 & 2 & $\mathbf{X}\Phi^{\dagger}\Phi^{\dagger}$ & $\omega^{2}$ & 3 & 1 & $\mathbf{Z}\Phi^{\dagger}\mathbf{F}^{\dagger}$ & $\omega$ & $\tfrac{1}{2}(0,\, {-\tau},\, 1,\, {-\sigma})$ \\
+  \hyperlink{atlas:2I:50b}{50b} & 3 & 2 & $\mathbf{X}^{\dagger}\Phi^{\dagger}\Phi^{\dagger}$ & $\omega^{-2}$ & 3 & 1 & $\mathbf{Z}^{\dagger}\Phi^{\dagger}\mathbf{F}^{\dagger}$ & $\omega^{-3}$ & $\tfrac{1}{2}(0,\, \tau,\, {-1},\, \sigma)$ \\
+  \hyperlink{atlas:2I:53a}{53a} & 3 & 2 & $\mathbf{Z}\Phi\Phi$ & $\omega^{2}$ & 3 & 1 & $\Phi^{\dagger}\mathbf{Z}\mathbf{F}^{\dagger}$ & $\omega$ & $\tfrac{1}{2}(1,\, {-\sigma},\, 0,\, {-\tau})$ \\
+  \hyperlink{atlas:2I:53b}{53b} & 3 & 2 & $\mathbf{Z}^{\dagger}\Phi\Phi$ & $\omega^{-2}$ & 3 & 1 & $\Phi^{\dagger}\mathbf{Z}^{\dagger}\mathbf{F}^{\dagger}$ & $\omega^{-3}$ & $\tfrac{1}{2}({-1},\, \sigma,\, 0,\, \tau)$ \\
+  \hyperlink{atlas:2I:54a}{54a} & 3 & 2 & $\mathbf{F}\Phi\Phi$ & $\omega$ & 3 & 1 & $\Phi^{\dagger}\mathbf{Z}^{\dagger}\mathbf{F}$ & $\omega^{-1}$ & $\tfrac{1}{2}(\tau,\, 1,\, 0,\, {-\sigma})$ \\
+  \hyperlink{atlas:2I:55a}{55a} & 2 & 2 & $\Phi\Phi$ & $1$ & 4 & 1 & $\mathbf{F}\mathbf{X}\Phi^{\dagger}\mathbf{Z}$ & $\omega^{-3}$ & $\tfrac{1}{2}(\sigma,\, 1,\, \tau,\, 0)$ \\
+  \hyperlink{atlas:2I:58a}{58a} & 3 & 2 & $\Phi\mathbf{Z}\Phi^{\dagger}$ & $\omega^{2}$ & 4 & 1 & $\mathbf{X}\mathbf{Z}\Phi^{\dagger}\mathbf{Z}$ & $\omega^{-2}$ & $\tfrac{1}{2}(0,\, {-1},\, {-\sigma},\, \tau)$ \\
+  \hyperlink{atlas:2I:58b}{58b} & 3 & 2 & $\Phi\mathbf{Z}^{\dagger}\Phi^{\dagger}$ & $\omega^{-2}$ & 4 & 1 & $\mathbf{X}\mathbf{Z}\Phi^{\dagger}\mathbf{Z}^{\dagger}$ & $\omega^{2}$ & $\tfrac{1}{2}(0,\, 1,\, \sigma,\, {-\tau})$ \\
+  \hyperlink{atlas:2I:59a}{59a} & 2 & 2 & $\Phi^{\dagger}\Phi^{\dagger}$ & $1$ & 4 & 1 & $\mathbf{X}\mathbf{Z}^{\dagger}\Phi^{\dagger}\mathbf{F}^{\dagger}$ & $\omega^{-1}$ & $\tfrac{1}{2}(\sigma,\, {-1},\, {-\tau},\, 0)$ \\
+  \hyperlink{atlas:2I:60a}{60a} & 3 & 2 & $\mathbf{X}\Phi\Phi$ & $\omega^{2}$ & 4 & 1 & $\mathbf{Z}\mathbf{F}\Phi^{\dagger}\mathbf{Z}$ & $\omega^{-3}$ & $\tfrac{1}{2}(0,\, \tau,\, {-1},\, {-\sigma})$ \\
+  \hyperlink{atlas:2I:60b}{60b} & 3 & 2 & $\mathbf{X}^{\dagger}\Phi\Phi$ & $\omega^{-2}$ & 4 & 1 & $\mathbf{Z}\mathbf{F}\Phi^{\dagger}\mathbf{Z}^{\dagger}$ & $\omega$ & $\tfrac{1}{2}(0,\, {-\tau},\, 1,\, \sigma)$ \\
+  \hyperlink{atlas:2I:35b}{35b} & 3 & 1 & $\mathbf{X}\Phi\mathbf{F}^{\dagger}$ & $\omega$ & 3 & 1 & $\mathbf{X}^{\dagger}\mathbf{F}\Phi^{\dagger}$ & $\omega^{-1}$ & $\tfrac{1}{2}(\sigma,\, 1,\, {-\tau},\, 0)$ \\
+  \hyperlink{atlas:2I:36b}{36b} & 3 & 1 & $\mathbf{X}\Phi^{\dagger}\mathbf{F}$ & $\omega^{3}$ & 3 & 1 & $\mathbf{X}^{\dagger}\mathbf{F}^{\dagger}\Phi$ & $\omega^{-3}$ & $\tfrac{1}{2}({-1},\, {-\tau},\, \sigma,\, 0)$ \\
+  \hyperlink{atlas:2I:45b}{45b} & 3 & 1 & $\mathbf{Z}\Phi\mathbf{F}^{\dagger}$ & $\omega$ & 3 & 1 & $\mathbf{Z}^{\dagger}\mathbf{F}\Phi^{\dagger}$ & $\omega^{-1}$ & $\tfrac{1}{2}(\tau,\, 0,\, \sigma,\, {-1})$ \\
+  \hyperlink{atlas:2I:46b}{46b} & 3 & 1 & $\mathbf{Z}\Phi^{\dagger}\mathbf{F}$ & $\omega^{3}$ & 3 & 1 & $\mathbf{Z}^{\dagger}\mathbf{F}^{\dagger}\Phi$ & $\omega^{-3}$ & $\tfrac{1}{2}({-\sigma},\, 0,\, {-1},\, \tau)$ \\
+\bottomrule
+\end{tabular}
+\caption{The 17 elements of $\TwoI$ where the two synthesizers return different gate sequences, in the format of Appendix~\ref{app:atlas}: $\#$ is the element's row of Table~\ref{tab:binary-icosahedral-group-2i}, its pair number and $a$ or $b$, and $q$ its own signed quaternion, which that table prints $\pm$, once per pair. BFS minimizes depth; Dijkstra minimizes $\Phi$-count, then depth. The blocks disagree on $\varphi$ on all 17 rows, so read the $\varphi$ beside the sequence you run. Rows run by BFS $\Phi$-count, then by $\#$, so the trade is read top to bottom: on the first 13 Dijkstra lowers it, from three or two $\Phi$ gates down to one, sometimes at the cost of a longer sequence; on the last four it is already one under BFS, so the two sequences differ only in arrangement, at equal depth. In every case the Dijkstra sequence contains exactly one $\Phi$.}
+\label{tab:bfs-vs-dijkstra}
+\end{table}

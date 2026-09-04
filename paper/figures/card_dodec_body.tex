@@ -1,0 +1,101 @@
+% Appendix D, Figure D.5 --- "The dodecahedral POVM, end to end".  The layout only.
+%
+% Layout: card_oct_body.tex's header is binding.  Deviations from it, and only
+% they, are listed here.
+%
+%   * THIS IS THE BINDING CARD, at 21.30pt of reserve: its float is the
+%     tallest of the five against \textheight = 700.50687pt.  Every literal
+%     in the generator's emitters is shared across the five, so any wording
+%     change must be re-measured here before it ships.
+%   * the ray line is the most fragile object on the five pages: ten rays,
+%     443.86pt natural at \small against the 452.9679pt line -- 9.11pt of
+%     slack.  Re-measure before changing any ray label.
+%   * band 1 nests the worked $E_1$ under the two vertex blocks, as on the
+%     icosahedron.
+%   * band 2 runs 377pt + 75pt, with $B$ and $C$ in the side column; the
+%     unfactored $A$ is the chapter head's (assertion 32).
+%   * band 4's draw note runs to TWO lines, and every word of it is
+%     measured.  "Realization forces the $\TwoI$ draw." alone is false: the
+%     ten-word coin times a drawn $\{\Id, X, Y, Z\}$ flip, applied last, puts
+%     forty non-group elements on both of randomness's jobs at once,
+%     exactly, for half the $\Phi$ (randomized_twojobs' check_flip_completion),
+%     so "forces" needs its scope ("Among groups") and the cheaper draw needs
+%     saying.  The relabelling "($X$ or $Y$ swaps the pair)" may not be
+%     dropped either: without the swap the four flips average the readout to
+%     a multiple of $\Id$.  The wrapping is NOT read off the natural width:
+%     888.29pt breaks to three lines where 880.80 still sets two, because
+%     $\Id, X, Y, Z$ and $0.4\,\Phi$ cannot break.  Set the candidate in a
+%     \vtop at 452.9679pt and read its DEPTH -- 2.5pt is one line, about
+%     14pt is two.  A third line costs about 11pt of the reserve, so
+%     re-measure before adding a word; if height is ever needed the ladder
+%     below is the source.  One thing the note must not say: that a $\TwoT$
+%     draw would hand this card the inscribed cube.  A $\TwoT$ draw splits
+%     the ten axes 4 + 6 and the ALIGNMENT VERTEX selects which -- vertex 9,
+%     this card's, selects the six, not the inscribed cube.
+%   * the cut ladder, if this card must ever give height, in measured order:
+%     drop the worked $E_1$ (-25.34pt); band rules 4.00 -> 3.00pt (-4.00pt);
+%     the six \NIS 5 -> 4pt (-6.00pt); the key's `upper`/`lower` heads
+%     (-11pt, at the cost of head 3 naming the wires again); and only as a
+%     last resort \PanelScale 2.47 -> 2.20 here alone (-17pt), which forfeits
+%     the uniform panel this design spends most on.
+% All macros below are \def and therefore local to the figure environment.
+\parindent=0pt \parskip=0pt
+\input{../code/data/card_dodec_data}
+\long\def\NIS#1{\vskip #1\nointerlineskip}
+\long\def\CTR#1#2{\hbox to #1{\hss #2\hss}}
+\long\def\PBOX#1#2{\vtop{\hsize=#1\parindent0pt\sloppy\emergencystretch=1.5em\small #2}}
+\long\def\COL#1#2{\vtop{\hsize=#1\parindent0pt\hbox{}\nointerlineskip #2}}
+\long\def\FULLHEAD#1#2#3{\hbox to \hsize{\small\textbf{#1}\,#2\hfil{\footnotesize #3}}}
+\def\BANDRULE{\vskip2pt\hrule height0.5pt\vskip1.5pt\nointerlineskip}
+\long\def\TAB#1{{\small\renewcommand{\arraystretch}{0.88}\setlength{\tabcolsep}{3pt}#1}}
+%
+\vbox{\hsize\textwidth\parindent0pt
+%
+% --- title and the header strip: Figure 1.1's own row -----------------------
+\hbox to \hsize{\large\bfseries \CTitle\hfil{\normalfont\footnotesize \CPtrStrip}}%
+\NIS{5pt}%
+\hbox{\CStrip}%
+\BANDRULE
+%
+% --- band 1: the object -----------------------------------------------------
+\FULLHEAD{1}{\CHeadA}{\CPtrA}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{170pt}{\CTR{170pt}{\includegraphics{figures/card_dodec_sphere.pdf}}}%
+  \hfil
+  \COL{277pt}{\hbox to 277pt{\hfil\TAB{\CardVertexBlockA}\hskip10pt\TAB{\CardVertexBlockB}}%
+    \NIS{4pt}\PBOX{277pt}{\CIdentB}}%
+}%
+\NIS{4pt}%
+\PBOX{\hsize}{\CIdent}%
+\BANDRULE
+%
+% --- band 2: the machine ----------------------------------------------------
+\FULLHEAD{2}{\CHeadB}{\CPtrB}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{377pt}{\hbox to 377pt{\includegraphics{figures/card_dec_dodec.pdf}\hss}}%
+  \hfil
+  \COL{75pt}{\small\CardSide}%
+}%
+\NIS{5pt}%
+\PBOX{\hsize}{\CParams}%
+\BANDRULE
+%
+% --- band 3: the readout ----------------------------------------------------
+\FULLHEAD{3}{\CHeadC}{\CPtrC}%
+\NIS{5pt}%
+\hbox to \hsize{%
+  \COL{206pt}{\TAB{\CardKey}}%
+  \hfil
+  \COL{238pt}{\PBOX{238pt}{\CKappa}}%
+}%
+\BANDRULE
+%
+% --- band 4: the alternative ------------------------------------------------
+\FULLHEAD{4}{\CHeadD}{\CPtrD}%
+\NIS{5pt}%
+\PBOX{\hsize}{\CRays}%
+\NIS{2pt}%
+\PBOX{\hsize}{\CCoin}%
+}%

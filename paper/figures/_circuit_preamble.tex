@@ -1,0 +1,43 @@
+% Shared preamble for the standalone circuit figures in this directory.
+%
+% qcircuit runs on xy-pic, which costs ~26ms per diagram on every compile of the
+% thesis; drawn once here and included as PDFs, they cost the thesis nothing.
+% The one circuit still inline in the main text (Figure 4.1) keeps qcircuit in
+% the thesis preamble -- it sits among text that reflows, and is edited more
+% often than these.
+%
+% Eleven drawings share this preamble: the five card circuits of Appendix D's
+% Figures D.1-D.5 (card_dec_*.tex), the five reference drawings they were built
+% from (circuit_dec_*.tex, read by code/_build_povm_cards.py and
+% code/_build_recipe_figure.py rather than included), and Figure 1.1's
+% mini-circuit.  The macros they share are declared here once and copied from
+% bsc-thesis.tex; only the handful they use is here, and it must keep agreeing.
+%
+% 11pt matches the thesis document class, so a circuit built here is the same
+% size it was inline; the figures are therefore included at natural size, with
+% no width= to rescale them.
+%
+% The border is {left bottom right top} and every number in it was measured,
+% not guessed. xy-pic under-declares its bounding box: the \lstick labels
+% (|0>, \rho) hang 13.5pt off the left of it and the outer wires another 0.4pt
+% -- half a rule width -- off each remaining side. At border=0pt the labels are
+% silently CLIPPED AWAY. Hence 14pt and 0.5pt.
+%
+% Left and right are equal on purpose. Inline, the box being centred was the
+% one xy declared, i.e. the wires without their labels; padding both sides
+% equally keeps that same box centred, so the circuits land exactly where they
+% used to on the page rather than shifting ~7pt.
+%
+% Re-measure if a circuit ever changes shape: build at a large known border,
+% ask `gs -sDEVICE=bbox` for the true ink box, and the difference per side is
+% what the border has to cover.
+\documentclass[11pt, border={14pt 0.5pt 14pt 0.5pt}]{standalone}
+
+\usepackage{mathtools}  % loads amsmath (smallmatrix, \text)
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{qcircuit}
+
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Id}{\mathbbm{1}}
+\newcommand{\phig}{\tau}   % golden ratio, Conway & Smith

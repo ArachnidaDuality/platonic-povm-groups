@@ -1,0 +1,68 @@
+% Appendix D, the octahedral card, band 1 --- the octahedral panel of Figure 2.2,
+% re-drawn with numbered chips.
+%
+% Modelled line for line on recipe_tet_sphere.tex: same macros, same pose
+% {60}{120}, \PanelScale 2.47 (Figure 1.1's size, one notch under Figure 2.2's
+% 2.6), and the panel block itself --- halo widths, blade axis U = z_hat, the
+% \drawEdge / \drawRayDisk order --- copied verbatim from the octahedron panel
+% of platonic_solid_povms.tex.  \PanelHeader, not \PanelHeaderSil: this solid's
+% vertices sit on the equator, so the equator anchors the sphere.
+% \PanelFooter is deliberately NOT used --- the solid's name is the card's title.
+%
+% \AxisNubs, not \PauliLabels.  Figure 2.2's kets sit at radius 1.0 on the six
+% vertex directions, which is where the chips are; they are re-homed in the
+% card's identities note (E_5 = |0><0|/3, E_6 = |1><1|/3), where they set at
+% footnotesize instead of scriptsize.  For the same reason recipe_tet_sphere's
+% grey \hat x, \hat y, \hat z names are NOT copied: this solid's vertices ARE
+% the coordinate axes, so a name at radius 1.10 lands 2pt from the chip on the
+% same ray (measured), the numbered chips already carry the identity, and the
+% vertex table decodes them (vertex 5 = (0,0,+1)).  The nubs at 1.00--1.06 sit
+% inside the chip ring (chips start 4.25pt beyond the tip) and mark the three
+% positive axes without text.
+%
+% The six chips are placed AFTER the scaled scope closes, so their 9pt offsets
+% are true page points; ($(vk)!-9pt!(O)$) reads "9pt beyond the tip, along the
+% ray from the sphere centre", which is projection-agnostic and must not be
+% replaced by hard-coded angles.  Measured minimum chip separation 53.70pt
+% against a 9.5pt chip, so all six are chipped.
+%
+% Include at natural size --- no width= --- the type set here is printed type.
+\input{_povm_sphere_preamble}
+\standaloneconfig{border=2pt}
+\renewcommand{\PanelScale}{2.47}
+\usetikzlibrary{calc}
+\newcommand{\chipnode}[3]{\node[circle,draw=black,line width=0.4pt,fill=white,
+  inner sep=0.6pt,minimum size=9.5pt,font=\footnotesize] (chip#1) at #2 {#3};}
+\begin{document}
+\begin{tikzpicture}
+  \renewcommand{\haloW}{1.5pt}
+  \renewcommand{\haloBackW}{0.7pt}
+  \renewcommand{\haloFrontEqW}{0.7pt}
+  \renewcommand{\bladeUx}{0}
+  \renewcommand{\bladeUy}{0}
+  \renewcommand{\bladeUz}{1}
+  \PanelHeader{0}{0}
+    \drawEdge{oct}{1}{3}\drawEdge{oct}{1}{4}\drawEdge{oct}{1}{5}\drawEdge{oct}{1}{6}
+    \drawEdge{oct}{2}{3}\drawEdge{oct}{2}{4}\drawEdge{oct}{2}{5}\drawEdge{oct}{2}{6}
+    \drawEdge{oct}{3}{5}\drawEdge{oct}{3}{6}\drawEdge{oct}{4}{5}\drawEdge{oct}{4}{6}
+    \drawRayDisk{oct}{2}{0.25}\drawRayDisk{oct}{6}{0.25}
+    \drawRayDisk{oct}{4}{0.25}\drawRayDisk{oct}{3}{0.25}
+    \drawRayDisk{oct}{5}{0.25}\drawRayDisk{oct}{1}{0.25}
+    \AxisNubs
+    \coordinate (O) at (0,0,0);
+    \coordinate (v1) at (\Vx{oct}{1},\Vy{oct}{1},\Vz{oct}{1});
+    \coordinate (v2) at (\Vx{oct}{2},\Vy{oct}{2},\Vz{oct}{2});
+    \coordinate (v3) at (\Vx{oct}{3},\Vy{oct}{3},\Vz{oct}{3});
+    \coordinate (v4) at (\Vx{oct}{4},\Vy{oct}{4},\Vz{oct}{4});
+    \coordinate (v5) at (\Vx{oct}{5},\Vy{oct}{5},\Vz{oct}{5});
+    \coordinate (v6) at (\Vx{oct}{6},\Vy{oct}{6},\Vz{oct}{6});
+  \end{scope}                      % close the inner scaled/tdplot scope
+  \chipnode{1}{($(v1)!-9pt!(O)$)}{1}
+  \chipnode{2}{($(v2)!-9pt!(O)$)}{2}
+  \chipnode{3}{($(v3)!-9pt!(O)$)}{3}
+  \chipnode{4}{($(v4)!-9pt!(O)$)}{4}
+  \chipnode{5}{($(v5)!-9pt!(O)$)}{5}
+  \chipnode{6}{($(v6)!-9pt!(O)$)}{6}
+  \end{scope}                      % close the outer xshift/yshift scope
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,58 @@
+# Citation metadata (Citation File Format 1.2.0). GitHub renders it as "Cite this repository";
+# Zenodo reads it when a release is archived. The Zenodo concept DOI belongs in `doi:` once minted.
+cff-version: 1.2.0
+message: >-
+  If you use this code or its data, please cite the thesis it accompanies
+  (the preferred citation below). The repository itself can be cited by its
+  Zenodo concept DOI once that exists.
+type: software
+title: "Symmetry Groups of the Platonic Solid POVMs: Binary Polyhedral Groups as Quantum Circuits"
+authors:
+  - family-names: Dandarov
+    given-names: Anton Atanasov
+    affiliation: Johannes Kepler University Linz
+abstract: >-
+  We study the symmetry groups of the Platonic solid POVMs: the binary polyhedral groups 2T, 2O,
+  and 2I, exact unitary 2-, 3-, and 5-designs. A unified treatment, bringing together mathematical
+  construction, quantum circuits, and cost, is missing. We provide it, in the single-qubit
+  setting, via two complementary constructions and a compilation, implemented with symbolic
+  computation. The result is an atlas of all 192 group elements, fully reproducible from
+  accompanying code, its gate sequences, none deeper than four, doubling as POVM rotation
+  circuits. Once anchored to the Pauli group, 2T and 2O are entirely Clifford, while the binary
+  icosahedral group 2I requires at most one non-Clifford gate per element—the golden gate Φ. As a
+  double-coset decomposition, 2I = 2T ⊔ 2T Φ 2T. We prove that only the octahedral POVM admits
+  exact implementation over our gate sets (Clifford+T among them), and never deterministically; in
+  our orientation, the other four point at magic states. We consider the POVMs in classical shadow
+  estimation, where an inexact implementation is paid for in estimator variance; scalability keeps
+  us to local shadows, a per-qubit factorized regime. We compare two randomized implementations:
+  both support robust shadow estimation, but calibrate different scalars; calibration must match
+  protocol. Every Platonic solid POVM has a Naimark dilation circuit, though never an exact one,
+  and a prepended draw from 2T, the least group that suffices, twirls measurement-side noise to
+  exactly depolarizing (and makes approximation cost variance, never bias). Only the antipodal
+  solids decompose into projective measurements, which excludes the tetrahedral SIC. There, one
+  drawn rotation must both realize the POVM and twirl the noise: among groups, granted by 2T for
+  all but the dodecahedron, which requires 2I.
+keywords:
+  - binary polyhedral groups
+  - Platonic solid POVMs
+  - quantum circuit synthesis
+  - SU(2)
+  - classical shadows
+repository-code: "https://github.com/ArachnidaDuality/platonic-povm-groups"
+license: MIT
+version: "1.0.0"
+date-released: 2026-09-04
+# doi: 10.5281/zenodo.XXXXXXX
+preferred-citation:
+  type: thesis
+  thesis-type: "Bachelor's thesis"
+  title: "Symmetry Groups of the Platonic Solid POVMs: Binary Polyhedral Groups as Quantum Circuits"
+  authors:
+    - family-names: Dandarov
+      given-names: Anton Atanasov
+  institution:
+    name: Johannes Kepler University Linz
+  department: Institute for Integrated Circuits and Quantum Computing
+  year: 2026
+  month: 9
+  license: CC-BY-4.0

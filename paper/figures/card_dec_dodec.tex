@@ -1,0 +1,36 @@
+% Appendix D, the dodecahedral card, band 2 --- Decker Fig. 13 as the card draws it.
+%
+% circuit_dec_dodec.tex with exactly four differences, and the generator
+% (code/_build_povm_cards.py, assertion 14) grid-diffs this file against that
+% one cell by cell and admits no others:
+%   (i)   one inserted column on the data row carrying the optional pre-rotation
+%         \gate{U_g}, fenced by its own dashed \gategroup{5}{2}{5}{2}{.7em}{--},
+%         and one \qw in that column on every other wire;
+%   (ii)  the reorientation drawn as the named box \gate{U_R} --- the rotation it
+%         stands for is printed in the card's parameter block, which is what
+%         takes this circuit from 441.6bp to 375.0bp;
+%   (iii) the solid \gategroup's column indices shifted by exactly +1;
+%   (iv)  the wire spacing @R=1.5em -> 1.2em, and ONLY the wire spacing.  This is
+%         the binding card, and the tighter spacing is worth -13.09pt of body
+%         height, bought without touching a gate, the pose, the
+%         \gategroup or the type.  Taken on BOTH A_5 circuits so the pair prints
+%         at one spacing; the generator requires the two to agree.
+% Both new gates sit OUTSIDE the solid \gategroup, which still fences Decker's
+% published block exactly as before: reorient Decker, never the atlas.
+%
+% Set flush left on the card, never centred: all of xy-pic's ~13.7bp of slack is
+% on the right, and _circuit_preamble's border={14pt 0.5pt 14pt 0.5pt} is what
+% keeps the \lstick |0> and rho labels from being clipped.  Include at natural
+% size --- no width=.
+\input{_circuit_preamble}
+\begin{document}
+$$
+\Qcircuit @C=1.4em @R=1.2em {
+    \lstick{\ket{0}} & \qw        & \qw       & \qw       & \qw      & \gate{\begin{smallmatrix}1 & 1 \\ -1 & 1\end{smallmatrix}} & \gate{\begin{smallmatrix}1 & -1 \\ 1 & 1\end{smallmatrix}} & \qw      & \ctrl{1}                                              & \meter \gategroup{1}{4}{5}{10}{1.1em}{-} \\
+    \lstick{\ket{0}} & \qw        & \qw       & \targ     & \gate{C} & \ctrl{-1}                                                  & \ctrlo{-1}                                                  & \gate{B} & \gate{\begin{smallmatrix}-1 & \\ & 1\end{smallmatrix}} & \meter \\
+    \lstick{\ket{0}} & \qw        & \qw       & \qw       & \qw      & \qw                                                       & \multigate{2}{\mathsf{F}_5^\dagger \oplus I_3}                      & \qw      & \qw                                                   & \meter \\
+    \lstick{\ket{0}} & \qw        & \qw       & \qw       & \qw      & \qw                                                       & \ghost{\mathsf{F}_5^\dagger \oplus I_3}                             & \qw      & \qw                                                   & \meter \\
+    \lstick{\rho}    & \gate{U_g} \gategroup{5}{2}{5}{2}{.7em}{--} & \gate{U_R} & \ctrl{-3} & \qw      & \qw                                                       & \ghost{\mathsf{F}_5^\dagger \oplus I_3}                             & \qw      & \qw                                                   & \meter
+}
+$$
+\end{document}

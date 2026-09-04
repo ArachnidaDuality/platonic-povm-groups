@@ -1,0 +1,246 @@
+\documentclass[border=5pt]{standalone}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+
+% --- View and lighting setup ----------------------------------------------
+\tdplotsetmaincoords{60}{120}
+
+% Camera-look-from direction in world coords for tdplot's convention:
+% tdplot rotates world by rotx around x, then rotz around z. Camera is
+% at +z' (the doubly-rotated +z), which in world coords is:
+%   ( sin(rotx)*sin(rotz), -sin(rotx)*cos(rotz), cos(rotx) )
+\pgfmathsetmacro{\viewX}{sin(60)*sin(120)}
+\pgfmathsetmacro{\viewY}{-sin(60)*cos(120)}
+\pgfmathsetmacro{\viewZ}{cos(60)}
+
+\pgfmathsetmacro{\lightX}{1/sqrt(6)}
+\pgfmathsetmacro{\lightY}{1/sqrt(6)}
+\pgfmathsetmacro{\lightZ}{2/sqrt(6)}
+
+% --- Geometry constants ---------------------------------------------------
+\pgfmathsetmacro{\PHI}{(1+sqrt(5))/2}
+\pgfmathsetmacro{\IPHI}{(sqrt(5)-1)/2}
+\pgfmathsetmacro{\TET}{1/sqrt(3)}
+\pgfmathsetmacro{\ICOS}{1/sqrt(2+\PHI)}
+\pgfmathsetmacro{\PHIICOS}{\PHI*\ICOS}
+\pgfmathsetmacro{\PHITET}{\PHI*\TET}
+\pgfmathsetmacro{\IPHITET}{\IPHI*\TET}
+
+% --- Vertex storage -------------------------------------------------------
+\newcommand{\PVert}[5]{%
+  \expandafter\edef\csname Vx#1at#2\endcsname{#3}%
+  \expandafter\edef\csname Vy#1at#2\endcsname{#4}%
+  \expandafter\edef\csname Vz#1at#2\endcsname{#5}%
+}
+\newcommand{\Vx}[2]{\csname Vx#1at#2\endcsname}
+\newcommand{\Vy}[2]{\csname Vy#1at#2\endcsname}
+\newcommand{\Vz}[2]{\csname Vz#1at#2\endcsname}
+
+% --- Per-face shading (back-face cull + Lambertian) -----------------------
+% \faceShade{name}{i}{j}{k} sets \NdotV (visibility test, draw iff > 0)
+% and \graypct (fill black!\graypct, in [10,35]). Auto-orients the normal
+% by checking against the face centroid, so face vertex order need not be
+% CCW-from-outside.
+\newcommand{\faceShade}[4]{%
+  \pgfmathsetmacro{\Pax}{\Vx{#1}{#2}}\pgfmathsetmacro{\Pay}{\Vy{#1}{#2}}\pgfmathsetmacro{\Paz}{\Vz{#1}{#2}}%
+  \pgfmathsetmacro{\Pbx}{\Vx{#1}{#3}}\pgfmathsetmacro{\Pby}{\Vy{#1}{#3}}\pgfmathsetmacro{\Pbz}{\Vz{#1}{#3}}%
+  \pgfmathsetmacro{\Pcx}{\Vx{#1}{#4}}\pgfmathsetmacro{\Pcy}{\Vy{#1}{#4}}\pgfmathsetmacro{\Pcz}{\Vz{#1}{#4}}%
+  \pgfmathsetmacro{\Eax}{\Pbx-\Pax}\pgfmathsetmacro{\Eay}{\Pby-\Pay}\pgfmathsetmacro{\Eaz}{\Pbz-\Paz}%
+  \pgfmathsetmacro{\Ebx}{\Pcx-\Pax}\pgfmathsetmacro{\Eby}{\Pcy-\Pay}\pgfmathsetmacro{\Ebz}{\Pcz-\Paz}%
+  \pgfmathsetmacro{\Nrx}{\Eay*\Ebz - \Eaz*\Eby}%
+  \pgfmathsetmacro{\Nry}{\Eaz*\Ebx - \Eax*\Ebz}%
+  \pgfmathsetmacro{\Nrz}{\Eax*\Eby - \Eay*\Ebx}%
+  \pgfmathsetmacro{\Nlen}{sqrt(\Nrx*\Nrx + \Nry*\Nry + \Nrz*\Nrz)}%
+  \pgfmathsetmacro{\Nx}{\Nrx/\Nlen}%
+  \pgfmathsetmacro{\Ny}{\Nry/\Nlen}%
+  \pgfmathsetmacro{\Nz}{\Nrz/\Nlen}%
+  \pgfmathsetmacro{\Cx}{(\Pax+\Pbx+\Pcx)/3}%
+  \pgfmathsetmacro{\Cy}{(\Pay+\Pby+\Pcy)/3}%
+  \pgfmathsetmacro{\Cz}{(\Paz+\Pbz+\Pcz)/3}%
+  \pgfmathsetmacro{\NdotC}{\Nx*\Cx + \Ny*\Cy + \Nz*\Cz}%
+  \pgfmathparse{\NdotC<0 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \pgfmathsetmacro{\Nx}{-1*\Nx}\pgfmathsetmacro{\Ny}{-1*\Ny}\pgfmathsetmacro{\Nz}{-1*\Nz}%
+  \fi
+  \pgfmathsetmacro{\NdotV}{\Nx*\viewX + \Ny*\viewY + \Nz*\viewZ}%
+  \pgfmathsetmacro{\NdotL}{max(0, \Nx*\lightX + \Ny*\lightY + \Nz*\lightZ)}%
+  \pgfmathsetmacro{\graypct}{int(round(35 - 25*\NdotL))}%
+}
+
+% --- Fixed-arity face drawers --------------------------------------------
+\newcommand{\drawTri}[4]{%
+  \faceShade{#1}{#2}{#3}{#4}%
+  \pgfmathparse{\NdotV>0 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \draw[fill=black!\graypct, draw=black!75, line width=0.4pt, line join=round]
+      (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) --
+      (\Vx{#1}{#3},\Vy{#1}{#3},\Vz{#1}{#3}) --
+      (\Vx{#1}{#4},\Vy{#1}{#4},\Vz{#1}{#4}) -- cycle;
+  \fi
+}
+\newcommand{\drawQuad}[5]{%
+  \faceShade{#1}{#2}{#3}{#4}%
+  \pgfmathparse{\NdotV>0 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \draw[fill=black!\graypct, draw=black!75, line width=0.4pt, line join=round]
+      (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) --
+      (\Vx{#1}{#3},\Vy{#1}{#3},\Vz{#1}{#3}) --
+      (\Vx{#1}{#4},\Vy{#1}{#4},\Vz{#1}{#4}) --
+      (\Vx{#1}{#5},\Vy{#1}{#5},\Vz{#1}{#5}) -- cycle;
+  \fi
+}
+\newcommand{\drawPent}[6]{%
+  \faceShade{#1}{#2}{#3}{#4}%
+  \pgfmathparse{\NdotV>0 ? 1 : 0}%
+  \ifnum\pgfmathresult=1
+    \draw[fill=black!\graypct, draw=black!75, line width=0.4pt, line join=round]
+      (\Vx{#1}{#2},\Vy{#1}{#2},\Vz{#1}{#2}) --
+      (\Vx{#1}{#3},\Vy{#1}{#3},\Vz{#1}{#3}) --
+      (\Vx{#1}{#4},\Vy{#1}{#4},\Vz{#1}{#4}) --
+      (\Vx{#1}{#5},\Vy{#1}{#5},\Vz{#1}{#5}) --
+      (\Vx{#1}{#6},\Vy{#1}{#6},\Vz{#1}{#6}) -- cycle;
+  \fi
+}
+
+% --- Vertex tables (all normalized to unit circumsphere) -----------------
+
+% Tetrahedron: (+,+,+) (-,-,+) (-,+,-) (+,-,-) scaled by 1/sqrt(3)
+\PVert{tet}{1}{\TET}{\TET}{\TET}
+\PVert{tet}{2}{-\TET}{-\TET}{\TET}
+\PVert{tet}{3}{-\TET}{\TET}{-\TET}
+\PVert{tet}{4}{\TET}{-\TET}{-\TET}
+
+% Cube: (+/-,+/-,+/-)/sqrt(3)
+\PVert{cube}{1}{-\TET}{-\TET}{-\TET}
+\PVert{cube}{2}{\TET}{-\TET}{-\TET}
+\PVert{cube}{3}{\TET}{\TET}{-\TET}
+\PVert{cube}{4}{-\TET}{\TET}{-\TET}
+\PVert{cube}{5}{-\TET}{-\TET}{\TET}
+\PVert{cube}{6}{\TET}{-\TET}{\TET}
+\PVert{cube}{7}{\TET}{\TET}{\TET}
+\PVert{cube}{8}{-\TET}{\TET}{\TET}
+
+% Octahedron: +-e_i
+\PVert{oct}{1}{1}{0}{0}
+\PVert{oct}{2}{-1}{0}{0}
+\PVert{oct}{3}{0}{1}{0}
+\PVert{oct}{4}{0}{-1}{0}
+\PVert{oct}{5}{0}{0}{1}
+\PVert{oct}{6}{0}{0}{-1}
+
+% Icosahedron: cyclic perms of (0, +-phi, +-1), scaled by 1/sqrt(1+phi^2)
+\PVert{ico}{1}{\PHIICOS}{\ICOS}{0}
+\PVert{ico}{2}{-\PHIICOS}{\ICOS}{0}
+\PVert{ico}{3}{\PHIICOS}{-\ICOS}{0}
+\PVert{ico}{4}{-\PHIICOS}{-\ICOS}{0}
+\PVert{ico}{5}{0}{\PHIICOS}{\ICOS}
+\PVert{ico}{6}{0}{-\PHIICOS}{\ICOS}
+\PVert{ico}{7}{0}{\PHIICOS}{-\ICOS}
+\PVert{ico}{8}{0}{-\PHIICOS}{-\ICOS}
+\PVert{ico}{9}{\ICOS}{0}{\PHIICOS}
+\PVert{ico}{10}{-\ICOS}{0}{\PHIICOS}
+\PVert{ico}{11}{\ICOS}{0}{-\PHIICOS}
+\PVert{ico}{12}{-\ICOS}{0}{-\PHIICOS}
+
+% Dodecahedron: cube vertices + cyclic perms of (0, +-1/phi, +-phi), all /sqrt(3)
+\PVert{dod}{1}{\TET}{\TET}{\TET}
+\PVert{dod}{2}{\TET}{\TET}{-\TET}
+\PVert{dod}{3}{\TET}{-\TET}{\TET}
+\PVert{dod}{4}{\TET}{-\TET}{-\TET}
+\PVert{dod}{5}{-\TET}{\TET}{\TET}
+\PVert{dod}{6}{-\TET}{\TET}{-\TET}
+\PVert{dod}{7}{-\TET}{-\TET}{\TET}
+\PVert{dod}{8}{-\TET}{-\TET}{-\TET}
+\PVert{dod}{9}{0}{\IPHITET}{\PHITET}
+\PVert{dod}{10}{0}{\IPHITET}{-\PHITET}
+\PVert{dod}{11}{0}{-\IPHITET}{\PHITET}
+\PVert{dod}{12}{0}{-\IPHITET}{-\PHITET}
+\PVert{dod}{13}{\IPHITET}{\PHITET}{0}
+\PVert{dod}{14}{\IPHITET}{-\PHITET}{0}
+\PVert{dod}{15}{-\IPHITET}{\PHITET}{0}
+\PVert{dod}{16}{-\IPHITET}{-\PHITET}{0}
+\PVert{dod}{17}{\PHITET}{0}{\IPHITET}
+\PVert{dod}{18}{\PHITET}{0}{-\IPHITET}
+\PVert{dod}{19}{-\PHITET}{0}{\IPHITET}
+\PVert{dod}{20}{-\PHITET}{0}{-\IPHITET}
+
+\begin{document}
+\begin{tikzpicture}
+
+  % --- Panel 1: Tetrahedron --------------------------------------------
+  \begin{scope}[xshift=0mm]
+    \begin{scope}[scale=1.2, tdplot_main_coords]
+      \drawTri{tet}{1}{2}{3}
+      \drawTri{tet}{1}{2}{4}
+      \drawTri{tet}{1}{3}{4}
+      \drawTri{tet}{2}{3}{4}
+    \end{scope}
+    \node[anchor=north, font=\small] at (0, -1.5) {Tetrahedron};
+  \end{scope}
+
+  % --- Panel 2: Octahedron (8mm gap to Tet -> 32mm) ---------------------
+  \begin{scope}[xshift=32mm]
+    \begin{scope}[scale=1.2, tdplot_main_coords]
+      \drawTri{oct}{1}{3}{5}\drawTri{oct}{1}{3}{6}
+      \drawTri{oct}{1}{4}{5}\drawTri{oct}{1}{4}{6}
+      \drawTri{oct}{2}{3}{5}\drawTri{oct}{2}{3}{6}
+      \drawTri{oct}{2}{4}{5}\drawTri{oct}{2}{4}{6}
+    \end{scope}
+    \node[anchor=north, font=\small] at (0, -1.5) {Octahedron};
+  \end{scope}
+
+  % --- Panel 3: Cube (intra-pair 4mm gap -> 60mm) -----------------------
+  \begin{scope}[xshift=60mm]
+    \begin{scope}[scale=1.2, tdplot_main_coords]
+      \drawQuad{cube}{1}{2}{3}{4}  % bottom
+      \drawQuad{cube}{5}{6}{7}{8}  % top
+      \drawQuad{cube}{1}{2}{6}{5}  % front (y=-1)
+      \drawQuad{cube}{4}{3}{7}{8}  % back (y=+1)
+      \drawQuad{cube}{1}{4}{8}{5}  % left (x=-1)
+      \drawQuad{cube}{2}{3}{7}{6}  % right (x=+1)
+    \end{scope}
+    \node[anchor=north, font=\small] at (0, -1.5) {Cube};
+  \end{scope}
+
+  % --- Panel 4: Icosahedron (inter-pair 8mm gap -> 92mm) ----------------
+  \begin{scope}[xshift=92mm]
+    \begin{scope}[scale=1.2, tdplot_main_coords]
+      % Top cap (5 triangles around V1)
+      \drawTri{ico}{1}{3}{9}\drawTri{ico}{1}{9}{5}
+      \drawTri{ico}{1}{5}{7}\drawTri{ico}{1}{7}{11}
+      \drawTri{ico}{1}{11}{3}
+      % Bottom cap (5 triangles around V4)
+      \drawTri{ico}{4}{2}{10}\drawTri{ico}{4}{10}{6}
+      \drawTri{ico}{4}{6}{8}\drawTri{ico}{4}{8}{12}
+      \drawTri{ico}{4}{12}{2}
+      % Middle band (10 triangles)
+      \drawTri{ico}{3}{9}{6}\drawTri{ico}{9}{5}{10}
+      \drawTri{ico}{5}{7}{2}\drawTri{ico}{7}{11}{12}
+      \drawTri{ico}{11}{3}{8}\drawTri{ico}{2}{10}{5}
+      \drawTri{ico}{10}{6}{9}\drawTri{ico}{6}{8}{3}
+      \drawTri{ico}{8}{12}{11}\drawTri{ico}{12}{2}{7}
+    \end{scope}
+    \node[anchor=north, font=\small] at (0, -1.5) {Icosahedron};
+  \end{scope}
+
+  % --- Panel 5: Dodecahedron (intra-pair 4mm gap -> 120mm) --------------
+  \begin{scope}[xshift=120mm]
+    \begin{scope}[scale=1.2, tdplot_main_coords]
+      \drawPent{dod}{1}{13}{2}{18}{17}
+      \drawPent{dod}{1}{9}{5}{15}{13}
+      \drawPent{dod}{1}{17}{3}{11}{9}
+      \drawPent{dod}{8}{16}{7}{19}{20}
+      \drawPent{dod}{8}{12}{4}{14}{16}
+      \drawPent{dod}{8}{20}{6}{10}{12}
+      \drawPent{dod}{2}{13}{15}{6}{10}
+      \drawPent{dod}{2}{10}{12}{4}{18}
+      \drawPent{dod}{3}{14}{16}{7}{11}
+      \drawPent{dod}{3}{17}{18}{4}{14}
+      \drawPent{dod}{5}{9}{11}{7}{19}
+      \drawPent{dod}{5}{15}{6}{20}{19}
+    \end{scope}
+    \node[anchor=north, font=\small] at (0, -1.5) {Dodecahedron};
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}

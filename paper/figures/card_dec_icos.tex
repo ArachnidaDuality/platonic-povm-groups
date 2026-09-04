@@ -1,0 +1,36 @@
+% Appendix D, the icosahedral card, band 2 --- Decker Fig. 15 as the card draws it.
+%
+% circuit_dec_icos.tex with exactly four differences, and the generator
+% (code/_build_povm_cards.py, assertion 14) grid-diffs this file against that
+% one cell by cell and admits no others:
+%   (i)   one inserted column on the data row carrying the optional pre-rotation
+%         \gate{U_g}, fenced by its own dashed \gategroup{4}{2}{4}{2}{.7em}{--},
+%         and one \qw in that column on every other wire;
+%   (ii)  the reorientation drawn as the named box \gate{U_R} --- the rotation
+%         product it stands for is printed in the card's parameter column, which
+%         is what takes this circuit from 425.9bp to 375.0bp and is what makes
+%         the chapter head's "written $U_R$" literally true;
+%   (iii) the solid \gategroup's column indices shifted by exactly +1;
+%   (iv)  the wire spacing @R=1.5em -> 1.2em, and ONLY the wire spacing: every
+%         gate, the pose, the \gategroup and the type are untouched.  Taken on
+%         BOTH A_5 circuits, never one, so the pair prints at one spacing --- the
+%         asymmetry would show on two cards a reader compares line by line.  The
+%         generator requires the two to agree.
+% Both new gates sit OUTSIDE the solid \gategroup, which still fences Decker's
+% published block exactly as before: reorient Decker, never the atlas.
+%
+% Set flush left on the card, never centred: all of xy-pic's ~13.7bp of slack is
+% on the right, and _circuit_preamble's border={14pt 0.5pt 14pt 0.5pt} is what
+% keeps the \lstick |0> and rho labels from being clipped.  Include at natural
+% size --- no width=.
+\input{_circuit_preamble}
+\begin{document}
+$$
+\Qcircuit @C=1.4em @R=1.2em {
+    \lstick{\ket{0}} & \qw        & \qw       & \qw       & \qw      & \gate{\begin{smallmatrix}1 & 1 \\ -1 & 1\end{smallmatrix}} & \gate{\begin{smallmatrix}1 & -1 \\ 1 & 1\end{smallmatrix}} & \qw      & \ctrl{1}                                              & \meter \gategroup{1}{4}{4}{10}{1.1em}{-} \\
+    \lstick{\ket{0}} & \qw        & \qw       & \targ     & \gate{C} & \ctrl{-1}                                                  & \ctrlo{-1}                                                  & \gate{B} & \gate{\begin{smallmatrix}-1 & \\ & 1\end{smallmatrix}} & \meter \\
+    \lstick{\ket{0}} & \qw        & \qw       & \qw       & \qw      & \qw                                                       & \multigate{1}{\mathsf{F}_3^\dagger \oplus I_1}                      & \qw      & \qw                                                   & \meter \\
+    \lstick{\rho}    & \gate{U_g} \gategroup{4}{2}{4}{2}{.7em}{--} & \gate{U_R} & \ctrl{-2} & \qw      & \qw                                                       & \ghost{\mathsf{F}_3^\dagger \oplus I_1}                             & \qw      & \qw                                                   & \meter
+}
+$$
+\end{document}

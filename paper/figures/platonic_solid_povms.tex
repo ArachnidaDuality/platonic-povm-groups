@@ -1,0 +1,144 @@
+\input{_povm_sphere_preamble}
+\begin{document}
+\begin{tikzpicture}
+
+  % Row labels (left margin) ---------------------------------------------
+  \node[rowlabel] at (-65mm,    0mm) {$\TwoT$};
+  \node[rowlabel] at (-65mm,  -65mm) {$\TwoO$};
+  \node[rowlabel] at (-65mm, -130mm) {$\TwoI$};
+
+  % ===== Row 1: Tetrahedron (centred) ===================================
+  % Tetrahedron uses the silhouette variant since none of its vertices lie on
+  % the equator, so the equator alone wouldn't anchor the sphere visually.
+  % Blade width axis U = (0,1,1)/sqrt(2): tilted off-axis so the chiral tet
+  % rays don't foreshorten too aggressively (min width ~23%, max ~99%).
+  \renewcommand{\haloW}{1.5pt}
+  \renewcommand{\haloBackW}{0.7pt}
+  \renewcommand{\haloFrontEqW}{0.7pt}
+  \renewcommand{\bladeUx}{0}
+  \renewcommand{\bladeUy}{0.70710678}
+  \renewcommand{\bladeUz}{0.70710678}
+  \PanelHeaderSil{0}{0}
+    % edges (6)
+    \drawEdge{tet}{1}{2}\drawEdge{tet}{1}{3}\drawEdge{tet}{1}{4}
+    \drawEdge{tet}{2}{3}\drawEdge{tet}{2}{4}\drawEdge{tet}{3}{4}
+    % rays + disks (4), ordered back-to-front by v.c so the most front-facing
+    % blade lands on top of the others within the bladelayer
+    \drawRayDisk{tet}{3}{0.28}\drawRayDisk{tet}{2}{0.28}
+    \drawRayDisk{tet}{4}{0.28}\drawRayDisk{tet}{1}{0.28}
+    % axis nubs (drawn last so they sit on top)
+    \AxisNubs
+  \PanelFooter{Tetrahedron}
+
+  % ===== Row 2 left: Octahedron =========================================
+  % Octahedron alone keeps the Pauli kets: its 6 POVM vertices coincide with
+  % +-x, +-y, +-z, so the ket labels read correctly as vertex labels.
+  % Blade width axis U = z_hat puts +/-x and +/-y blades flat in the
+  % xy-plane (the Pauli axes); +/-z falls back to w = y_hat (yz-plane).
+  \renewcommand{\haloW}{1.5pt}
+  \renewcommand{\haloBackW}{0.7pt}
+  \renewcommand{\haloFrontEqW}{0.7pt}
+  \renewcommand{\bladeUx}{0}
+  \renewcommand{\bladeUy}{0}
+  \renewcommand{\bladeUz}{1}
+  \PanelHeader{-32}{-65}
+    % edges (12): every non-antipodal pair
+    \drawEdge{oct}{1}{3}\drawEdge{oct}{1}{4}\drawEdge{oct}{1}{5}\drawEdge{oct}{1}{6}
+    \drawEdge{oct}{2}{3}\drawEdge{oct}{2}{4}\drawEdge{oct}{2}{5}\drawEdge{oct}{2}{6}
+    \drawEdge{oct}{3}{5}\drawEdge{oct}{3}{6}\drawEdge{oct}{4}{5}\drawEdge{oct}{4}{6}
+    % rays + disks (6), ordered back-to-front by v.c
+    \drawRayDisk{oct}{2}{0.25}\drawRayDisk{oct}{6}{0.25}
+    \drawRayDisk{oct}{4}{0.25}\drawRayDisk{oct}{3}{0.25}
+    \drawRayDisk{oct}{5}{0.25}\drawRayDisk{oct}{1}{0.25}
+    \PauliLabels
+  \PanelFooter{Octahedron}
+
+  % ===== Row 2 right: Cube ==============================================
+  % U = (0,1,1)/sqrt(2): tilted off-axis to keep the 8 body-diagonal rays
+  % visibly distinct -- two pairs near edge-on (~23%), four pairs medium
+  % (~66%), two pairs face-on (~99%).
+  \renewcommand{\haloW}{1.5pt}
+  \renewcommand{\haloBackW}{0.7pt}
+  \renewcommand{\haloFrontEqW}{0.7pt}
+  \renewcommand{\bladeUx}{0}
+  \renewcommand{\bladeUy}{0.70710678}
+  \renewcommand{\bladeUz}{0.70710678}
+  \PanelHeader{32}{-65}
+    % edges (12): two faces + four verticals
+    \drawEdge{cube}{1}{2}\drawEdge{cube}{2}{3}\drawEdge{cube}{3}{4}\drawEdge{cube}{4}{1}
+    \drawEdge{cube}{5}{6}\drawEdge{cube}{6}{7}\drawEdge{cube}{7}{8}\drawEdge{cube}{8}{5}
+    \drawEdge{cube}{1}{5}\drawEdge{cube}{2}{6}\drawEdge{cube}{3}{7}\drawEdge{cube}{4}{8}
+    % rays + disks (8), ordered back-to-front by v.c so cube{7} (most
+    % front-facing, v.c ~ 0.97) lands on top instead of being overdrawn
+    \drawRayDisk{cube}{1}{0.22}\drawRayDisk{cube}{4}{0.22}
+    \drawRayDisk{cube}{5}{0.22}\drawRayDisk{cube}{2}{0.22}
+    \drawRayDisk{cube}{8}{0.22}\drawRayDisk{cube}{3}{0.22}
+    \drawRayDisk{cube}{6}{0.22}\drawRayDisk{cube}{7}{0.22}
+    \AxisNubs
+  \PanelFooter{Cube}
+
+  % ===== Row 3 left: Icosahedron ========================================
+  \renewcommand{\haloW}{2pt}
+  \renewcommand{\haloBackW}{0.8pt}
+  \renewcommand{\haloFrontEqW}{0.7pt}
+  \PanelHeader{-32}{-130}
+    % edges (30)
+    % V1 cap (5)
+    \drawEdge{ico}{1}{3}\drawEdge{ico}{1}{5}\drawEdge{ico}{1}{7}
+    \drawEdge{ico}{1}{9}\drawEdge{ico}{1}{11}
+    % V4 cap (5)
+    \drawEdge{ico}{2}{4}\drawEdge{ico}{4}{6}\drawEdge{ico}{4}{8}
+    \drawEdge{ico}{4}{10}\drawEdge{ico}{4}{12}
+    % top-cap ring (5)
+    \drawEdge{ico}{3}{9}\drawEdge{ico}{5}{9}\drawEdge{ico}{5}{7}
+    \drawEdge{ico}{7}{11}\drawEdge{ico}{3}{11}
+    % bottom-cap ring (5)
+    \drawEdge{ico}{2}{10}\drawEdge{ico}{6}{10}\drawEdge{ico}{6}{8}
+    \drawEdge{ico}{8}{12}\drawEdge{ico}{2}{12}
+    % middle band (10)
+    \drawEdge{ico}{6}{9}\drawEdge{ico}{3}{6}\drawEdge{ico}{5}{10}
+    \drawEdge{ico}{9}{10}\drawEdge{ico}{2}{7}\drawEdge{ico}{2}{5}
+    \drawEdge{ico}{11}{12}\drawEdge{ico}{7}{12}\drawEdge{ico}{3}{8}
+    \drawEdge{ico}{8}{11}
+    % disks (12) -- rays dropped; 12-fold starburst would dominate the polytope
+    \drawDisk{ico}{1}{0.22}\drawDisk{ico}{2}{0.22}
+    \drawDisk{ico}{3}{0.22}\drawDisk{ico}{4}{0.22}
+    \drawDisk{ico}{5}{0.22}\drawDisk{ico}{6}{0.22}
+    \drawDisk{ico}{7}{0.22}\drawDisk{ico}{8}{0.22}
+    \drawDisk{ico}{9}{0.22}\drawDisk{ico}{10}{0.22}
+    \drawDisk{ico}{11}{0.22}\drawDisk{ico}{12}{0.22}
+    \AxisNubs
+  \PanelFooter{Icosahedron}
+
+  % ===== Row 3 right: Dodecahedron ======================================
+  \renewcommand{\haloW}{1.5pt}
+  \renewcommand{\haloBackW}{0.8pt}
+  \renewcommand{\haloFrontEqW}{0.7pt}
+  \PanelHeader{32}{-130}
+    % edges (30): each vertex has degree 3
+    \drawEdge{dod}{1}{9}\drawEdge{dod}{1}{13}\drawEdge{dod}{1}{17}
+    \drawEdge{dod}{2}{10}\drawEdge{dod}{2}{13}\drawEdge{dod}{2}{18}
+    \drawEdge{dod}{3}{11}\drawEdge{dod}{3}{14}\drawEdge{dod}{3}{17}
+    \drawEdge{dod}{4}{12}\drawEdge{dod}{4}{14}\drawEdge{dod}{4}{18}
+    \drawEdge{dod}{5}{9}\drawEdge{dod}{5}{15}\drawEdge{dod}{5}{19}
+    \drawEdge{dod}{6}{10}\drawEdge{dod}{6}{15}\drawEdge{dod}{6}{20}
+    \drawEdge{dod}{7}{11}\drawEdge{dod}{7}{16}\drawEdge{dod}{7}{19}
+    \drawEdge{dod}{8}{12}\drawEdge{dod}{8}{16}\drawEdge{dod}{8}{20}
+    \drawEdge{dod}{9}{11}\drawEdge{dod}{10}{12}\drawEdge{dod}{13}{15}
+    \drawEdge{dod}{14}{16}\drawEdge{dod}{17}{18}\drawEdge{dod}{19}{20}
+    % disks (20) -- rays dropped; 20-fold starburst would dominate the polytope
+    \drawDisk{dod}{1}{0.18}\drawDisk{dod}{2}{0.18}
+    \drawDisk{dod}{3}{0.18}\drawDisk{dod}{4}{0.18}
+    \drawDisk{dod}{5}{0.18}\drawDisk{dod}{6}{0.18}
+    \drawDisk{dod}{7}{0.18}\drawDisk{dod}{8}{0.18}
+    \drawDisk{dod}{9}{0.18}\drawDisk{dod}{10}{0.18}
+    \drawDisk{dod}{11}{0.18}\drawDisk{dod}{12}{0.18}
+    \drawDisk{dod}{13}{0.18}\drawDisk{dod}{14}{0.18}
+    \drawDisk{dod}{15}{0.18}\drawDisk{dod}{16}{0.18}
+    \drawDisk{dod}{17}{0.18}\drawDisk{dod}{18}{0.18}
+    \drawDisk{dod}{19}{0.18}\drawDisk{dod}{20}{0.18}
+    \AxisNubs
+  \PanelFooter{Dodecahedron}
+
+\end{tikzpicture}
+\end{document}

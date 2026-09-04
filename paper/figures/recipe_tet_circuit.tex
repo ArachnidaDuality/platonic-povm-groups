@@ -1,0 +1,28 @@
+% Figure 1.1, band B --- the tetrahedral POVM circuit.
+%
+% COPIED FROM FIGURE 4.1 IN bsc-thesis.tex --- KEEP IN SYNC.
+% _build_recipe_figure.py asserts the two \Qcircuit bodies are byte-equal after
+% whitespace normalisation, so a drift in either is caught at generation time.
+% Figure 4.1 itself stays inline: sharing one source between the two would be
+% right in principle, but the duplication is four lines and the check above is
+% what makes it safe.
+%
+% The dashed \gategroup is the optional pre-rotation U_g; the solid one fences
+% Decker's circuit as published.  Figure 4.1's caption reads the two boxes that
+% way, so the boundary is load-bearing and neither may move.  The data wire
+% controls and the ancilla is the target: \targ on wire 1, \ctrl{-1} on wire 2.
+%
+% _circuit_preamble's border={14pt 0.5pt 14pt 0.5pt} is what keeps the \lstick
+% labels: xy-pic under-declares its box by ~13.5pt on the left, and at border=0
+% the |0> and rho labels are silently clipped away.  Include at natural size,
+% no width=, and never inside a tikzpicture or a \savebox placed as a node ---
+% the node would size itself from \wd (277pt) while the ink is ~291pt.
+\input{_circuit_preamble}
+\begin{document}
+$$
+\Qcircuit @C=2.0em @R=1.5em {
+    \lstick{\ket{0}} & \qw        & \qw                & \targ     & \gate{U_A} & \ctrl{1} & \qw      & \meter \gategroup{1}{4}{2}{8}{1.1em}{-} \\
+    \lstick{\rho}    & \gate{U_g} \gategroup{2}{2}{2}{2}{.7em}{--} & \gate{T^\dagger} & \ctrl{-1} & \qw        & \gate{S} & \gate{H} & \meter
+}
+$$
+\end{document}

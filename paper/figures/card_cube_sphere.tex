@@ -1,0 +1,80 @@
+% Appendix D, the cubic card, band 1 --- the cubic panel of Figure 2.2,
+% re-drawn with numbered chips.
+%
+% Modelled line for line on card_oct_sphere.tex and recipe_tet_sphere.tex: same
+% macros, same pose {60}{120}, \PanelScale 2.47 (Figure 1.1's size, one notch
+% under Figure 2.2's 2.6), and the panel block itself --- halo widths, blade axis
+% U = (0,1,1)/sqrt2, the \drawEdge / \drawRayDisk order --- copied verbatim from
+% the cube panel of platonic_solid_povms.tex.  \PanelHeader, not
+% \PanelHeaderSil, and \PanelFooter deliberately NOT used: the solid's name is
+% the card's title.
+%
+% The three grey axis names ARE drawn here, unlike the octahedron card.  That
+% omission is the octahedron's own and has a measurement behind it (its
+% vertices ARE the axes, so a name at radius 1.10 lands 2.67pt from the chip on
+% the same ray); the cube's nearest chip centre to an axis anchor is 53.73pt
+% (measured off this projection at this scale), so the names are free here and
+% the panel keeps the frame Figure 1.1's tetrahedron has.
+%
+% Chips: ALL EIGHT (the all-V minimum projected separation is 52.05pt against
+% a 9.5pt chip).  Vertex 7 points nearly at the camera (v.view = 0.972,
+% projected radius 16.6pt), so its ray is a foreshortened stub and its chip
+% takes the larger 11pt offset, exactly as Figure 1.1 does for the
+% tetrahedron's vertex 1 --- the same geometry, the same remedy.
+%
+% Chips are placed AFTER the scaled scope closes, so their offsets are true page
+% points; ($(vk)!-9pt!(O)$) reads "9pt beyond the tip, along the ray from the
+% sphere centre", which is projection-agnostic and must not be replaced by
+% hard-coded angles.
+%
+% Include at natural size --- no width= --- the type set here is printed type.
+\input{_povm_sphere_preamble}
+\standaloneconfig{border=2pt}
+\renewcommand{\PanelScale}{2.47}
+\usetikzlibrary{calc}
+\newcommand{\chipnode}[3]{\node[circle,draw=black,line width=0.4pt,fill=white,
+  inner sep=0.6pt,minimum size=9.5pt,font=\footnotesize] (chip#1) at #2 {#3};}
+\begin{document}
+\begin{tikzpicture}
+  \renewcommand{\haloW}{1.5pt}
+  \renewcommand{\haloBackW}{0.7pt}
+  \renewcommand{\haloFrontEqW}{0.7pt}
+  \renewcommand{\bladeUx}{0}
+  \renewcommand{\bladeUy}{0.70710678}
+  \renewcommand{\bladeUz}{0.70710678}
+  \PanelHeader{0}{0}
+    \drawEdge{cube}{1}{2}\drawEdge{cube}{2}{3}\drawEdge{cube}{3}{4}\drawEdge{cube}{4}{1}
+    \drawEdge{cube}{5}{6}\drawEdge{cube}{6}{7}\drawEdge{cube}{7}{8}\drawEdge{cube}{8}{5}
+    \drawEdge{cube}{1}{5}\drawEdge{cube}{2}{6}\drawEdge{cube}{3}{7}\drawEdge{cube}{4}{8}
+    \drawRayDisk{cube}{1}{0.22}\drawRayDisk{cube}{4}{0.22}
+    \drawRayDisk{cube}{5}{0.22}\drawRayDisk{cube}{2}{0.22}
+    \drawRayDisk{cube}{8}{0.22}\drawRayDisk{cube}{3}{0.22}
+    \drawRayDisk{cube}{6}{0.22}\drawRayDisk{cube}{7}{0.22}
+    \AxisNubs
+    \coordinate (O) at (0,0,0);
+    \coordinate (v1) at (\Vx{cube}{1},\Vy{cube}{1},\Vz{cube}{1});
+    \coordinate (v2) at (\Vx{cube}{2},\Vy{cube}{2},\Vz{cube}{2});
+    \coordinate (v3) at (\Vx{cube}{3},\Vy{cube}{3},\Vz{cube}{3});
+    \coordinate (v4) at (\Vx{cube}{4},\Vy{cube}{4},\Vz{cube}{4});
+    \coordinate (v5) at (\Vx{cube}{5},\Vy{cube}{5},\Vz{cube}{5});
+    \coordinate (v6) at (\Vx{cube}{6},\Vy{cube}{6},\Vz{cube}{6});
+    \coordinate (v7) at (\Vx{cube}{7},\Vy{cube}{7},\Vz{cube}{7});
+    \coordinate (v8) at (\Vx{cube}{8},\Vy{cube}{8},\Vz{cube}{8});
+    \node[font=\footnotesize,text=black!55,anchor=south west,inner sep=1pt,fill=white]
+      at (1.10,0,0) {$\hat x$};
+    \node[font=\footnotesize,text=black!55,anchor=west,inner sep=1pt,fill=white]
+      at (0,1.10,0) {$\hat y$};
+    \node[font=\footnotesize,text=black!55,anchor=south,inner sep=1pt,fill=white]
+      at (0,0,1.10) {$\hat z$};
+  \end{scope}                      % close the inner scaled/tdplot scope
+  \chipnode{1}{($(v1)!-9pt!(O)$)}{1}
+  \chipnode{2}{($(v2)!-9pt!(O)$)}{2}
+  \chipnode{3}{($(v3)!-9pt!(O)$)}{3}
+  \chipnode{4}{($(v4)!-9pt!(O)$)}{4}
+  \chipnode{5}{($(v5)!-9pt!(O)$)}{5}
+  \chipnode{6}{($(v6)!-9pt!(O)$)}{6}
+  \chipnode{7}{($(v7)!-11pt!(O)$)}{7}
+  \chipnode{8}{($(v8)!-9pt!(O)$)}{8}
+  \end{scope}                      % close the outer xshift/yshift scope
+\end{tikzpicture}
+\end{document}

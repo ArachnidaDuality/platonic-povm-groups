@@ -1,0 +1,16 @@
+% The dodecahedral POVM circuit (Decker Fig. 13), reoriented: the frozen pose
+% of record --- code/_build_povm_cards.py grid-diffs card_dec_dodec.tex against it.
+% The \gategroup fences Decker's published block; the reorientation sits
+% outside it, so what the fence encloses stays his circuit as published.
+\input{_circuit_preamble}
+\begin{document}
+$$
+\Qcircuit @C=1.4em @R=1.5em {
+    \lstick{\ket{0}} & \qw        & \qw       & \qw      & \gate{\begin{smallmatrix}1 & 1 \\ -1 & 1\end{smallmatrix}} & \gate{\begin{smallmatrix}1 & -1 \\ 1 & 1\end{smallmatrix}} & \qw      & \ctrl{1}                                              & \meter \gategroup{1}{3}{5}{9}{1.1em}{-} \\
+    \lstick{\ket{0}} & \qw        & \targ     & \gate{C} & \ctrl{-1}                                                  & \ctrlo{-1}                                                  & \gate{B} & \gate{\begin{smallmatrix}-1 & \\ & 1\end{smallmatrix}} & \meter \\
+    \lstick{\ket{0}} & \qw        & \qw       & \qw      & \qw                                                       & \multigate{2}{\mathsf{F}_5^\dagger \oplus I_3}                      & \qw      & \qw                                                   & \meter \\
+    \lstick{\ket{0}} & \qw        & \qw       & \qw      & \qw                                                       & \ghost{\mathsf{F}_5^\dagger \oplus I_3}                             & \qw      & \qw                                                   & \meter \\
+    \lstick{\rho}    & \gate{R_{\hat y}(-\arccos(\phig/\sqrt{\phig+2}))} & \ctrl{-3} & \qw      & \qw                                                       & \ghost{\mathsf{F}_5^\dagger \oplus I_3}                             & \qw      & \qw                                                   & \meter
+}
+$$
+\end{document}

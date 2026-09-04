@@ -1,0 +1,18 @@
+[project]
+name = "bpg-atlas"
+version = "0.1.0"
+description = "Symbolic and numeric code for the binary polyhedral group atlas and the Platonic solid POVMs"
+license = "MIT"
+requires-python = ">=3.14"
+dependencies = [
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.3",
+    "scipy>=1.18.0",
+    "sympy>=1.14.0",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+    "nbformat>=5.10.4",
+]

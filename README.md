@@ -2,6 +2,8 @@
 
 A BSc thesis, and its code. **→ [`paper/bsc-thesis.pdf`](paper/bsc-thesis.pdf)** (pre-submission).
 
+The POVMs on the Bloch sphere, in the browser: **→ [`extras/povms.html`](https://arachnidaduality.github.io/platonic-povm-groups/extras/povms.html)**.
+
 Behind every Platonic-solid POVM stands a group: the rotations carrying the solid to itself,
 lifted through the SU(2) → SO(3) double cover to one of the three *binary polyhedral groups*
 2T, 2O, 2I — the exceptional finite subgroups of SU(2), and exactly the unitaries that permute
